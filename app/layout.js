@@ -1,6 +1,7 @@
 import { Fugaz_One, Open_Sans, Rubik_Wet_Paint } from 'next/font/google';
 import './globals.css';
 import Navbar from './(components)/Navbar';
+import { AuthProvider } from '@/context/Authcontext';
 
 const opensans = Open_Sans({ subsets: ['latin'] });
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
   );
   return (
     <html lang="en">
+      <AuthProvider>
       <body
         className={
           'w-full mx-auto text-base bg-[#FFFFFF] text-[#00171F]  min-h-screen ' +
@@ -30,6 +32,7 @@ export default function RootLayout({ children }) {
         {children}
         {footer}
       </body>
+      </AuthProvider>
     </html>
   );
 }
