@@ -1,6 +1,7 @@
 'use client';
 import { Fugaz_One, Quattrocento, Rubik_Wet_Paint } from 'next/font/google';
 import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { db } from '@/firebase';
 import {
   collection,
@@ -41,60 +42,78 @@ async function addProductToFirestore(
 export default function ProductForm() {
   const [name, setName] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
-  const [buyingPrice, setBuyingprice] = useState('');
+  const [buyingPrice, setBuyingPrice] = useState('');
   const [quantity, setQuantity] = useState('');
 
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    if (isUpdateMode) {
-      if (selectedProduct) {
-        try {
-          const updatedProduct = {
-            name,
-            buyingPrice,
-            sellingPrice,
-            quantity,
-          };
-          const productRef = doc(db, 'products', selectedProduct.id);
-          await updateDoc(productRef, updatedProduct);
 
-          setName('');
-          setBuyingprice('');
-          setSellingPrice('');
-          setQuantity('');
-          setSelectedProduct(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const productId = searchParams.get('id');
 
-          setIsUpdateMode(false);
-
-          alert('Updated product succesfully!!');
-        } catch (error) {
-          console.error('failed to update product', error);
+  useEffect(() => {
+    async function fetchProduct() {
+      if (productId) {
+        const productRef = doc(db, 'products', productId);
+        const productSnap = await getDoc(productRef);
+        if (productSnap.exists()) {
+          const productData = productSnap.data();
+          setName(productData.name);
+          setBuyingPrice(productData.buyingPrice);
+          setSellingPrice(productData.sellingPrice);
+          setQuantity(productData.quantity);
+          setIsUpdateMode(true);
+        } else {
+          console.error('Product not found');
         }
       }
-    } else {
-      const added = await addProductToFirestore(
-        name,
-        Number(buyingPrice),
-        Number(sellingPrice),
-        Number(quantity)
-      );
-      if (added) {
-        setName('');
-        setBuyingprice('');
-        setSellingPrice('');
-        setQuantity('');
-        alert('product added successfully');
+    }
+    fetchProduct();
+  }, [productId]);
+  
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      if (isUpdateMode && productId) {
+        const updatedProduct = {
+          name,
+          buyingPrice: Number(buyingPrice),
+          sellingPrice: Number(sellingPrice),
+          quantity: Number(quantity),
+          updatedAt: serverTimestamp(),
+        };
+        const productRef = doc(db, 'products', productId);
+        await updateDoc(productRef, updatedProduct);
+  
+        alert('Product updated successfully');
+        router.push('/products');
+      } else {
+        const added = await addProductToFirestore(
+          name,
+          Number(buyingPrice),
+          Number(sellingPrice),
+          Number(quantity)
+        );
+        if (added) {
+          alert('Product added successfully');
+          setName('');
+          setBuyingPrice('');
+          setSellingPrice('');
+          setQuantity('');
+          router.push('/products');
+        }
       }
+    } catch (error) {
+      console.error('Failed to save product', error);
     }
   };
 
   const handleUpdateClick = (product) => {
     setName(product.name || '');
-    setBuyingprice(product.buyingPrice || '');
+    setBuyingPrice(product.buyingPrice || '');
     setSellingPrice(product.sellingPrice || '');
     setQuantity(product.quantity || '');
 
@@ -113,21 +132,23 @@ export default function ProductForm() {
         emmax
       </h1>
       <div className="flex justify-center capitalize  ">
-        <form className="flex flex-col gap-3 shadow-md shadow-gray-400 rounded-xl p-4">
+        <form className="flex flex-col gap-3 shadow-md shadow-gray-400 rounded-xl p-4 capitalize">
           <h3 className={'text-xl sm:text-3xl ' + fugaz.className}>
-            create your product
+          {isUpdateMode ? 'Update Product' : 'Create Product'}
           </h3>
-          <lebel>name</lebel>
+          <label>name: </label>
           <input
             className="bg-gray-200 rounded-xl"
             id="name"
+            
             name="name"
             type="text"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <lebel>buying price</lebel>
+          
+          <label>Buying price: </label>
           <input
             className="bg-gray-200 rounded-xl"
             id="buyingprice"
@@ -135,9 +156,10 @@ export default function ProductForm() {
             type="number"
             required
             value={buyingPrice}
-            onChange={(e) => setBuyingprice(e.target.value)}
+            onChange={(e) => setBuyingPrice(e.target.value)}
           />
-          <lebel>selling price</lebel>
+          
+          <label>selling price:</label>
           <input
             className="bg-gray-200 rounded-xl"
             id="sellingPrice"
@@ -147,7 +169,8 @@ export default function ProductForm() {
             value={sellingPrice}
             onChange={(e) => setSellingPrice(e.target.value)}
           />
-          <lebel>quantity</lebel>
+          
+          <label>quantity:</label>
           <input
             className="bg-gray-200 rounded-xl"
             id="quantity"
@@ -157,6 +180,7 @@ export default function ProductForm() {
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
           />
+          
 
           <button
             type="submit"

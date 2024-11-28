@@ -1,6 +1,7 @@
 'use client';
 import { Fugaz_One, Rubik_Wet_Paint } from 'next/font/google';
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { db } from '@/firebase';
 import {
   collection,
@@ -45,6 +46,8 @@ async function deleteProductFromFirestore(productId) {
 
 export default function Product() {
   const [products, setProducts] = useState([]);
+  const router = useRouter();
+
 
   useEffect(() => {
     async function fetchProducts() {
@@ -53,13 +56,19 @@ export default function Product() {
     }
     fetchProducts();
   }, []);
-
+  
+  const handleUpdateClick = (product) => {
+    router.push(`/productform?id=${product.id}`); // Navigate to the form with product ID
+   
+  };
   const handleDelete = async (productId) => {
     const deletedId = await deleteProductFromFirestore(productId);
     if (deletedId) {
       setProducts(products.filter((product) => product.id !== deletedId));
     }
   };
+
+
 
   return (
     <div>
@@ -72,27 +81,27 @@ export default function Product() {
         emmax
       </h1>
       <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-        {products.map((products) => (
+        {products.map((product) => (
           <div
-            key={products.id}
+            key={product.id}
             className="bg-white text-black shadow-md shadow-gray-400 capitalize rounded-xl p-4 text-center overflow-hidden"
           >
             <div className="border-b-2 rounded-md pb-2 uppercase font-semibold">
-              <p>{products.name}</p>
+              <p>{product.name}</p>
             </div>
             <div className="flex justify-between pt-2 text-sm">
-              <p>BP: {products.buyingPrice}</p>
-              <p>SP: {products.sellingPrice}</p>
+              <p>BP: {product.buyingPrice}</p>
+              <p>SP: {product.sellingPrice}</p>
             </div>
-            <p className="pt-2 text-sm">Quantity: {products.quantity}</p>
+            <p className="pt-2 text-sm">Quantity: {product.quantity}</p>
             <div className="flex justify-between pt-4">
               <button
-                onClick={() => handleDelete(products.id)}
+                onClick={() => handleDelete(product.id)}
                 className="bg-red-100 hover:bg-red-400 shadow-md shadow-gray-500 rounded-full px-4 py-2"
               >
                 Delete
               </button>
-              <button className="bg-green-100 hover:bg-green-400 shadow-md shadow-gray-500 rounded-full px-4 py-2">
+              <button onClick={()=> handleUpdateClick(product)} className="bg-green-100 hover:bg-green-400 shadow-md shadow-gray-500 rounded-full px-4 py-2">
                 Update
               </button>
             </div>
