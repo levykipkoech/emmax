@@ -1,10 +1,60 @@
+'use client';
 import { Fugaz_One, Rubik_Wet_Paint } from 'next/font/google';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { db } from '@/firebase';
+import {
+  collection,
+  doc,
+  getDoc,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  serverTimestamp,
+  query,
+  orderBy,
+} from 'firebase/firestore';
 
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
-const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400']});
+const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 
+async function fetchProductsFromFirestore() {
+  const productCollection = collection(db, 'emmax');
+  const querySnapshot = await getDoc(
+    query(productCollection, orderBy('createdAt', 'desc'))
+  );
+  const products = [];
+  querySnapshot.forEach((doc) => {
+    const productData = doc.data();
+    products.push({ id: doc.id, ...productData });
+  });
+  return products;
+}
+
+async function deleteProductFromFirestore(productId) {
+  try {
+    console.log('deleting product');
+    await deleteDoc(doc(db, 'products', productId));
+    return productId;
+  } catch (err) {
+    console.err('failed to delete product', err);
+    return null;
+  }
+}
 export default function Product() {
+  const [products, setProducts] = useState('');
+  const [name, setName] = useState('');
+  const [sellingPrice, setSellingPrice] = useState('');
+  const [buyingPrice, setBuyingprice] = useState('');
+  const [quantity, setQuantity] = useState('');
+
+  useEffect(() => {
+    async function fetchProducts() {
+      const products = await fetchProductsFromFirestore();
+      setProducts(products);
+    }
+    fetchProducts()
+  }, []);
+
   return (
     <div>
       <h1

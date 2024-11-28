@@ -2,17 +2,19 @@
 
 import { useAuth } from '@/context/Authcontext';
 import { Fugaz_One } from 'next/font/google';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 
 export default function Page() {
+  
   const [email, setEmail] = useState('');
   const [password, SetPassword] = useState('');
   const [isRegistered, setIsRegistered] = useState(false);
   const [authenticating, setAuthenticating] = useState(false);
 
-  const { signUp, login } = useAuth();
+  const { signUp, login, currentUser } = useAuth();
 
   async function handlesubmit() {
     if (!email || !password || password.length < 5) {
@@ -31,6 +33,9 @@ export default function Page() {
       setAuthenticating(false);
     }
   }
+   if(currentUser){
+    
+   }
   return (
     <div className="flex-1 flex flex-col justify-center items-center gap-4 h-screen p-3 ">
       <h3 className={' ' + fugaz.className}>
