@@ -5,11 +5,8 @@ import { db } from '@/firebase';
 import {
   collection,
   doc,
-  getDoc,
-  addDoc,
+  getDocs,
   deleteDoc,
-  updateDoc,
-  serverTimestamp,
   query,
   orderBy,
 } from 'firebase/firestore';
@@ -18,42 +15,51 @@ const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 
 async function fetchProductsFromFirestore() {
-  const productCollection = collection(db, 'emmax');
-  const querySnapshot = await getDoc(
-    query(productCollection, orderBy('createdAt', 'desc'))
-  );
-  const products = [];
-  querySnapshot.forEach((doc) => {
-    const productData = doc.data();
-    products.push({ id: doc.id, ...productData });
-  });
-  return products;
+  try {
+    const productCollection = query(
+      collection(db, 'products'),
+      
+    );
+    const querySnapshot = await getDocs(productCollection);
+    const products = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return products;
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    return [];
+  }
 }
 
 async function deleteProductFromFirestore(productId) {
   try {
-    console.log('deleting product');
     await deleteDoc(doc(db, 'products', productId));
+    console.log(`Product with ID ${productId} deleted successfully.`);
     return productId;
   } catch (err) {
-    console.err('failed to delete product', err);
+    console.error('Failed to delete product:', err);
     return null;
   }
 }
+
 export default function Product() {
-  const [products, setProducts] = useState('');
-  const [name, setName] = useState('');
-  const [sellingPrice, setSellingPrice] = useState('');
-  const [buyingPrice, setBuyingprice] = useState('');
-  const [quantity, setQuantity] = useState('');
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     async function fetchProducts() {
       const products = await fetchProductsFromFirestore();
       setProducts(products);
     }
-    fetchProducts()
+    fetchProducts();
   }, []);
+
+  const handleDelete = async (productId) => {
+    const deletedId = await deleteProductFromFirestore(productId);
+    if (deletedId) {
+      setProducts(products.filter((product) => product.id !== deletedId));
+    }
+  };
 
   return (
     <div>
@@ -65,27 +71,33 @@ export default function Product() {
       >
         emmax
       </h1>
-      <div className="grid sm:grid-cols-3 md:grid-cols-4">
-        <div className="bg-[#FFFFFF] text-[#00171F] shadow-md shadow-gray-400 capitalize rounded-xl p-2 m-2 text-center overflow-hidden ">
-          <div className=" border-b-2 rounded-md pt-2 uppercase ">
-            <p>bolts</p>
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        {products.map((products) => (
+          <div
+            key={products.id}
+            className="bg-white text-black shadow-md shadow-gray-400 capitalize rounded-xl p-4 text-center overflow-hidden"
+          >
+            <div className="border-b-2 rounded-md pb-2 uppercase font-semibold">
+              <p>{products.name}</p>
+            </div>
+            <div className="flex justify-between pt-2 text-sm">
+              <p>BP: {products.buyingPrice}</p>
+              <p>SP: {products.sellingPrice}</p>
+            </div>
+            <p className="pt-2 text-sm">Quantity: {products.quantity}</p>
+            <div className="flex justify-between pt-4">
+              <button
+                onClick={() => handleDelete(products.id)}
+                className="bg-red-100 hover:bg-red-400 shadow-md shadow-gray-500 rounded-full px-4 py-2"
+              >
+                Delete
+              </button>
+              <button className="bg-green-100 hover:bg-green-400 shadow-md shadow-gray-500 rounded-full px-4 py-2">
+                Update
+              </button>
+            </div>
           </div>
-          <div className="flex justify-between pt-2 m-3">
-            <p>bp:180</p>
-            <p>sp:200</p>
-          </div>
-          <p>quantity: 93</p>
-          <p>minStockLevel: 20</p>
-
-          <div className="flex justify-between pt-2">
-            <button className="bg-red-100 hover:bg-red-400 shadow-md shadow-gray-500 rounded-full p-1  ">
-              delete
-            </button>
-            <button className="bg-green-100 hover:bg-green-400 rounded-full p-1 shadow-md shadow-gray-500 ">
-              update
-            </button>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

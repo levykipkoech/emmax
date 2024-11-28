@@ -162,7 +162,6 @@ export default function ProductForm() {
             type="submit"
             onClick={handleUpdate}
             className="rounded-full bg-green-200 hover:bg-green-500 hover:scale-105 ease-in duration-300 shadow-md shadow-gray-300 mt-3 p-2"
-            
           >
             { isUpdateMode ? "Update Todo " : "Create Product" }
           </button>
