@@ -15,6 +15,7 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import Product from '../products/page';
+import Navbar from '../(components)/Navbar';
 
 const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
@@ -49,7 +50,6 @@ export default function ProductForm() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
 
-
   const router = useRouter();
   const searchParams = useSearchParams();
   const productId = searchParams.get('id');
@@ -73,7 +73,7 @@ export default function ProductForm() {
     }
     fetchProduct();
   }, [productId]);
-  
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -87,7 +87,7 @@ export default function ProductForm() {
         };
         const productRef = doc(db, 'products', productId);
         await updateDoc(productRef, updatedProduct);
-  
+
         alert('Product updated successfully');
         router.push('/products');
       } else {
@@ -123,31 +123,26 @@ export default function ProductForm() {
 
   return (
     <div className="h-screen">
-      <h1
-        className={
-          'font-bold uppercase text-center text-3xl md:text-4xl p-2 text-[#48F2FB] ' +
-          rubik.className
-        }
-      >
-        emmax
-      </h1>
+      <div className='mb-4'>
+        <Navbar />
+      </div>
+
       <div className="flex justify-center capitalize  ">
         <form className="flex flex-col gap-3 shadow-md shadow-gray-400 rounded-xl p-4 capitalize">
           <h3 className={'text-xl sm:text-3xl ' + fugaz.className}>
-          {isUpdateMode ? 'Update Product' : 'Create Product'}
+            {isUpdateMode ? 'Update Product' : 'Create Product'}
           </h3>
           <label>name: </label>
           <input
             className="bg-gray-200 rounded-xl"
             id="name"
-            
             name="name"
             type="text"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          
+
           <label>Buying price: </label>
           <input
             className="bg-gray-200 rounded-xl"
@@ -158,7 +153,7 @@ export default function ProductForm() {
             value={buyingPrice}
             onChange={(e) => setBuyingPrice(e.target.value)}
           />
-          
+
           <label>selling price:</label>
           <input
             className="bg-gray-200 rounded-xl"
@@ -169,7 +164,7 @@ export default function ProductForm() {
             value={sellingPrice}
             onChange={(e) => setSellingPrice(e.target.value)}
           />
-          
+
           <label>quantity:</label>
           <input
             className="bg-gray-200 rounded-xl"
@@ -180,14 +175,13 @@ export default function ProductForm() {
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
           />
-          
 
           <button
             type="submit"
             onClick={handleUpdate}
             className="rounded-full bg-green-200 hover:bg-green-500 hover:scale-105 ease-in duration-300 shadow-md shadow-gray-300 mt-3 p-2"
           >
-            { isUpdateMode ? "Update Todo " : "Create Product" }
+            {isUpdateMode ? 'Update product ' : 'Create Product'}
           </button>
         </form>
       </div>

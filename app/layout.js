@@ -15,7 +15,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   const header = <header className="pt-3"></header>;
   const footer = (
-    <footer>
+    <footer className=''>
       <p>footer</p>
     </footer>
   );

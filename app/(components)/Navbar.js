@@ -14,23 +14,44 @@ export default function Navbar() {
     setNav(!nav);
   };
   return (
-    <div className="">
-      <div className='flex justify-between items-center w-full h-full px-2'>
-        <div>
-          <h1 className={'uppercase font-bold pl-3 ' + fugaz.className}>
-            emmax
-          </h1>
-        </div>
+    <div className={'uppercase font-bold pl-3 ' + fugaz.className}>
+      <div className="flex justify-between items-center w-full h-full px-2">
+        <h1
+          className={
+            'uppercase font-bold pl-3 text-3xl md:text-center' + fugaz.className
+          }
+        >
+          emmax
+        </h1>
+
         <div className="justify-end">
           <ul className=" hidden md:flex p-2 ">
             <Link href="/products">
-              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">products</li>
+              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
+                products
+              </li>
+            </Link>
+            <Link href="/productform">
+              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
+                create product
+              </li>
+            </Link>
+            <Link href="/dashboard">
+              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
+                Dashboard
+              </li>
+            </Link>
+            <Link href="/login">
+              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
+                sign up
+              </li>
             </Link>
 
-            <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">sales</li>
-            <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">Dashboard</li>
-            <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">sign up</li>
-            <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">log in</li>
+            <Link href="">
+              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
+                log in
+              </li>
+            </Link>
           </ul>
         </div>
         <div
@@ -64,21 +85,32 @@ export default function Navbar() {
             </div>
 
             <ul className="capitalize flex flex-col">
-              <li onClick={() => setNav(false)} className="p-4 text-sm">
-                products
-              </li>
-              <li onClick={() => setNav(false)} className="p-4 text-sm">
-                sales
-              </li>
-              <li onClick={() => setNav(false)} className="p-4 text-sm">
-                Dashboard
-              </li>
-              <li onClick={() => setNav(false)} className="p-4 text-sm">
-                sign up
-              </li>
-              <li onClick={() => setNav(false)} className="p-4 text-sm">
-                log in
-              </li>
+              <Link href="/products">
+                <li onClick={() => setNav(false)} className="p-4 text-sm">
+                  products
+                </li>
+              </Link>
+              <Link href="/productform">
+                <li onClick={() => setNav(false)} className="p-4 text-sm">
+                  Create product
+                </li>
+              </Link>
+              <Link href="/dashboard">
+                <li onClick={() => setNav(false)} className="p-4 text-sm">
+                  dashboard
+                </li>
+              </Link>
+
+              <Link href="/signup">
+                <li onClick={() => setNav(false)} className="p-4 text-sm">
+                  sign up
+                </li>
+              </Link>
+              <Link href="/login">
+                <li onClick={() => setNav(false)} className="p-4 text-sm">
+                  log in
+                </li>
+              </Link>
             </ul>
           </div>
         </div>
