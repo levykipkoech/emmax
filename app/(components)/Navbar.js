@@ -1,11 +1,12 @@
 'use client';
-import { Fugaz_One } from 'next/font/google';
+import { Fugaz_One, Rubik_Wet_Paint } from 'next/font/google';
 import React, { useState } from 'react';
 import { RiMenu4Fill } from 'react-icons/ri';
 import { AiOutlineClose } from 'react-icons/ai';
 import Link from 'next/link';
 
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
+const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 
 export default function Navbar() {
   const [nav, setNav] = useState();
@@ -14,42 +15,45 @@ export default function Navbar() {
     setNav(!nav);
   };
   return (
-    <div className={'uppercase font-bold pl-3 ' + fugaz.className}>
+    <div className={'capitalize font-bold pl-3 sticky z-50 top-0 ' + fugaz.className}>
       <div className="flex justify-between items-center w-full h-full px-2">
-        <h1
+       <Link href="/">
+       <h1
           className={
-            'uppercase font-bold pl-3 text-3xl md:text-center' + fugaz.className
+            'bg-gradient-to-r from-orange-500 to-gray-300 bg-clip-text text-transparent uppercase font-bold pl-3 text-3xl md:text-center ' +
+            rubik.className
           }
         >
           emmax
         </h1>
+       </Link>
+        
 
         <div className="justify-end">
-          <ul className=" hidden md:flex p-2 ">
+          <ul className=" hidden md:flex p-2  ">
+            <Link href="/">
+              <li className="p-1 m-2 rounded-lg  bg-gray-600 hover:scale-105 ease-in duration-300 text-white">
+                home
+              </li>
+            </Link>
             <Link href="/products">
-              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
+              <li className="p-1 m-2 rounded-lg  bg-gray-600 hover:scale-105 ease-in duration-300 text-white">
                 products
               </li>
             </Link>
             <Link href="/productform">
-              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
+              <li className="p-1 m-2 rounded-lg  bg-gray-600  hover:scale-105 ease-in duration-300 text-white">
                 create product
               </li>
             </Link>
             <Link href="/dashboard">
-              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
+              <li className="p-1 m-2 rounded-lg  bg-gray-600  hover:scale-105 ease-in duration-300 text-white">
                 Dashboard
               </li>
             </Link>
             <Link href="/login">
-              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
+              <li className="p-1 m-2 rounded-lg  bg-gray-600  hover:scale-105 ease-in duration-300 text-white">
                 sign up
-              </li>
-            </Link>
-
-            <Link href="">
-              <li className="p-1 m-2 rounded-lg bg-[#55666E] text-[#FFFFFF]">
-                log in
               </li>
             </Link>
           </ul>
@@ -101,7 +105,7 @@ export default function Navbar() {
                 </li>
               </Link>
 
-              <Link href="/signup">
+              <Link href="/login">
                 <li onClick={() => setNav(false)} className="p-4 text-sm">
                   sign up
                 </li>

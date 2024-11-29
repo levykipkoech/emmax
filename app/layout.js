@@ -24,12 +24,15 @@ export default function RootLayout({ children }) {
       <AuthProvider>
       <body
         className={
-          'w-full mx-auto text-base bg-[#FFFFFF] text-[#00171F]  min-h-screen ' +
+          'w-full mx-auto text-base bg-gradient-to-r from-gray-800 to-orange-700 min-h-screen ' +
           opensans.className
         }
       >
         {header}
+        <div className='h-screen'>
         {children}
+        </div>
+        
         {footer}
       </body>
       </AuthProvider>

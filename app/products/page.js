@@ -65,7 +65,7 @@ export default function Product() {
   };
 
   return (
-    <div className="h-screen overflow-auto">
+    <div className="h-screen overflow-auto text-md">
       <h1>
         <Navbar />
       </h1>
@@ -73,26 +73,26 @@ export default function Product() {
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white text-black shadow-md shadow-gray-400 capitalize rounded-xl p-4 text-center overflow-hidden"
+            className="bg-gradient-to-tl from-orange-700 to-gray-600 text-white shadow-md shadow-gray-400 capitalize rounded-xl p-4 text-center overflow-hidden transition "
           >
             <div className="border-b-2 rounded-md pb-2 uppercase font-semibold">
               <p>{product.name}</p>
             </div>
-            <div className="flex justify-between pt-2 text-sm">
+            <div className="flex justify-between pt-2 text-md">
               <p>BP: {product.buyingPrice}</p>
               <p>SP: {product.sellingPrice}</p>
             </div>
-            <p className="pt-2 text-sm">Quantity: {product.quantity}</p>
+            <p className="pt-2 ">Quantity: {product.quantity}</p>
             <div className="flex justify-between pt-4">
               <button
                 onClick={() => handleDelete(product.id)}
-                className="bg-red-100 hover:bg-red-400 shadow-md shadow-gray-500 rounded-full px-4 py-2"
+                className="bg-red-300 hover:bg-red-400 shadow-md shadow-gray-500 rounded-full px-4 py-2 transition hover:scale-105 ease-in duration-100  "
               >
                 Delete
               </button>
               <button
                 onClick={() => handleUpdateClick(product)}
-                className="bg-green-100 hover:bg-green-400 shadow-md shadow-gray-500 rounded-full px-4 py-2"
+                className="bg-orange-300 hover:bg-orange-400 shadow-md shadow-gray-500 rounded-full px-4 py-2 transition hover:scale-105 ease-in duration-100  "
               >
                 Update
               </button>

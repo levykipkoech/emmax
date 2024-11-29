@@ -123,18 +123,19 @@ export default function ProductForm() {
 
   return (
     <div className="h-screen">
-      <div className='mb-4'>
+      <div className="mb-4">
         <Navbar />
       </div>
 
-      <div className="flex justify-center capitalize  ">
-        <form className="flex flex-col gap-3 shadow-md shadow-gray-400 rounded-xl p-4 capitalize">
+      <div className="flex justify-center capitalize ">
+        <form className="flex-1 flex flex-col justify-center items-center gap-4">
           <h3 className={'text-xl sm:text-3xl ' + fugaz.className}>
             {isUpdateMode ? 'Update Product' : 'Create Product'}
           </h3>
           <label>name: </label>
           <input
-            className="bg-gray-200 rounded-xl"
+            className="w-full max-w-[400px] mx-auto px-4 py-2 duration-300 hover:border-indigo-600 focus:border-indigo-600
+    sm:py-3 border-solid border-2 border-indigo-400 rounded-lg outline-none"
             id="name"
             name="name"
             type="text"
@@ -145,7 +146,8 @@ export default function ProductForm() {
 
           <label>Buying price: </label>
           <input
-            className="bg-gray-200 rounded-xl"
+            className="w-full max-w-[400px] mx-auto px-4 py-2 duration-300 hover:border-indigo-600 focus:border-indigo-600
+    sm:py-3 border-solid border-2 border-indigo-400 rounded-lg outline-none"
             id="buyingprice"
             name="buying price"
             type="number"
@@ -156,7 +158,8 @@ export default function ProductForm() {
 
           <label>selling price:</label>
           <input
-            className="bg-gray-200 rounded-xl"
+            className="w-full max-w-[400px] mx-auto px-4 py-2 duration-300 hover:border-indigo-600 focus:border-indigo-600
+    sm:py-3 border-solid border-2 border-indigo-400 rounded-lg outline-none"
             id="sellingPrice"
             name="sellingPrice"
             type="number"
@@ -167,7 +170,8 @@ export default function ProductForm() {
 
           <label>quantity:</label>
           <input
-            className="bg-gray-200 rounded-xl"
+            className="w-full max-w-[400px] mx-auto px-4 py-2 duration-300 hover:border-indigo-600 focus:border-indigo-600
+    sm:py-3 border-solid border-2 border-indigo-400 rounded-lg outline-none"
             id="quantity"
             name="quantity"
             type="number"
@@ -179,7 +183,7 @@ export default function ProductForm() {
           <button
             type="submit"
             onClick={handleUpdate}
-            className="rounded-full bg-green-200 hover:bg-green-500 hover:scale-105 ease-in duration-300 shadow-md shadow-gray-300 mt-3 p-2"
+            className="rounded-full bg-orange-600 hover:bg-orange-300 hover:scale-105 ease-in duration-300  m-3 p-2"
           >
             {isUpdateMode ? 'Update product ' : 'Create Product'}
           </button>
