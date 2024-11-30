@@ -3,7 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { db } from '@/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { logSale } from '../utils/LogSale';
+import Navbar from '../(components)/Navbar';
+import { Fugaz_One } from 'next/font/google';
 
+const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 export default function SalesForm() {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState('');
@@ -42,51 +45,68 @@ export default function SalesForm() {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Log a Sale</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <label>
-          Product:
-          <select
-            value={selectedProduct}
-            onChange={(e) => setSelectedProduct(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          >
-            <option value="" disabled>
-              Select a product
-            </option>
-            {products.map((product) => (
-              <option key={product.id} value={product.id}>
-                {product.name} (Stock: {product.quantity})
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Quantity:
-          <input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-        </label>
-        <label>
-          Customer Name (Optional):
-          <input
-            type="text"
-            value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-        </label>
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+    <div className="">
+      <div className="sticky top-0">
+        <Navbar />
+      </div>
+      <div className="mt-4 h-screen">
+        <h2
+          className={
+            'text-3xl text-center bg-gradient-to-r from-red-400 to-green-400 bg-clip-text text-transparent ' +
+            fugaz.className
+          }
         >
-          Log Sale
-        </button>
-      </form>
+          Log a Sale
+        </h2>
+        <div className='flex justify-center'>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col  gap-4 max-w-lg w-full p-4"
+          >
+            <label >
+             <p className={'font-semibold text-orange-400 text-xl ' + fugaz.className}> Product:</p>
+              <select
+                value={selectedProduct}
+                onChange={(e) => setSelectedProduct(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              >
+                <option value="" disabled >
+                  Select a product
+                </option>
+                {products.map((product) => (
+                  <option key={product.id} value={product.id}>
+                    {product.name} (Stock: {product.quantity})
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className={'font-semibold text-orange-400 ' + fugaz.className}>
+              Quantity:
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            </label>
+            <label className={'font-semibold text-orange-400 ' + fugaz.className}>
+              Customer Name (Optional):
+              <input
+                type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg"
+              />
+            </label>
+            <button
+              type="submit"
+              className="bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-900"
+            >
+              Log Sale
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { db } from '@/firebase';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import Link from 'next/link';
 import { Fugaz_One, Rubik_Wet_Paint } from 'next/font/google';
+import Navbar from '../(components)/Navbar';
 
 const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
@@ -28,36 +29,38 @@ export default function SalesHistory() {
 
   return (
     <div className="p-4">
-      <div className={"sticky top-0 h-20 flex justify-between " + fugaz.className}>
-        <Link href="/">
-          <h1
+      <div className="sticky top-0 h-full">
+        <Navbar />
+      </div>
+      <div className="h-screen mt-3">
+        <div className=" ">
+          <h2
             className={
-              'bg-gradient-to-r from-orange-500 to-gray-300 bg-clip-text text-transparent uppercase font-bold pl-3 text-3xl text-center ' +
-              rubik.className
+              'text-3xl text-center bg-gradient-to-r from-red-400 to-green-400 bg-clip-text text-transparent ' +
+              fugaz.className
             }
           >
-            emmax
-          </h1>
-        </Link>
-        <div className=''>
-          <Link href={'/salesForm'}>Add sales</Link>
+            Sales History
+          </h2>
+          <button className='items-end p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white w-auto '>
+          <Link href={'salesForm'}>add sales</Link>
+          </button>
+          
         </div>
-      </div>
-      <div className='h-screen'>
-      <h2 className="text-2xl font-bold mb-4">Sales History</h2>
-      <ul className="text-md text-orange-50">
-        {sales.map((sale) => (
-          <li key={sale.id} className="mb-4">
-            <div>Product: {sale.productName}</div>
-            <div>Quantity: {sale.quantity}</div>
-            <div>Total Price: ${sale.totalPrice}</div>
-            <div>Customer: {sale.customerName || 'N/A'}</div>
-            <div>
-              Date: {sale.timestamp?.toDate().toLocaleString() || 'Unknown'}
-            </div>
-          </li>
-        ))}
-      </ul>
+
+        <ul className="text-md text-orange-50 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4  text-md rounded-xl">
+          {sales.map((sale) => (
+            <li key={sale.id} className="mb-4 rounded-xl shadow-md shadow-gray-900 p-3">
+              <div>Product:  <span className='pl-3 text-blue-300'> {sale.productName}</span></div>
+              <div>Quantity:  <span className='pl-3 text-blue-300'> {sale.quantity}</span></div>
+              <div>Total Price: <span className='pl-3 text-blue-300'>  ksh {sale.totalPrice}</span></div>
+              <div>Customer:  <span className='pl-3 text-blue-300'> {sale.customerName || 'N/A'}</span></div>
+              <div>
+                Date: <span className='pl-3 text-blue-300'> {sale.timestamp?.toDate().toLocaleString() || 'Unknown'}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
