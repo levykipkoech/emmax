@@ -2,7 +2,7 @@
 import { Fugaz_One, Rubik_Wet_Paint } from 'next/font/google';
 import React, { useEffect, useState } from 'react';
 import { RiMenu4Fill } from 'react-icons/ri';
-import { AiOutlineClose } from 'react-icons/ai';
+import { IoMdClose } from "react-icons/io";
 import Link from 'next/link';
 import Logout from './Logout';
 
@@ -29,7 +29,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className={'' + fugaz.className}>
+    <div className={'pt-3 ' + fugaz.className}>
       <div
         className={
           shadow
@@ -100,7 +100,7 @@ export default function Navbar() {
           }
         >
           <div>
-            <div className="flex items-center justify-between m-2 pb-2 border-b border-[#2F4146]">
+            <div className="flex items-center justify-between m-2 pb-2 border-b border-[#ed6d04] rounded-lg">
               <h1 className={'uppercase font-bold pl-8 ' + fugaz.className}>
                 emmax
               </h1>
@@ -108,8 +108,9 @@ export default function Navbar() {
                 onClick={handleNav}
                 className="md:hidden text-3xl rounded-full bg-gray-700 text-orange-700 p-1 hover:cursor-pointer"
               >
-                <AiOutlineClose />
+                <IoMdClose />
               </div>
+            
             </div>
 
             <ul className="capitalize flex flex-col text-xl">
