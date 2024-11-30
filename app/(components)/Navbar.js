@@ -40,7 +40,7 @@ export default function Navbar() {
           <Link href="/">
             <h1
               className={
-                'bg-gradient-to-r from-orange-500 to-gray-300 bg-clip-text text-transparent uppercase font-bold pl-3 text-3xl text-center' +
+                'bg-gradient-to-r from-orange-500 to-gray-300 bg-clip-text text-transparent uppercase font-bold pl-3 text-3xl text-center ' +
                 rubik.className
               }
             >
@@ -68,6 +68,11 @@ export default function Navbar() {
               <Link href="/dashboard">
                 <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900  hover:scale-105 ease-in duration-300 text-white">
                   Dashboard
+                </li>
+              </Link>
+              <Link href="/sales">
+                <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900  hover:scale-105 ease-in duration-300 text-white">
+                  sales
                 </li>
               </Link>
 
@@ -101,7 +106,7 @@ export default function Navbar() {
         >
           <div>
             <div className="flex items-center justify-between m-2 pb-2 border-b border-[#ed6d04] rounded-lg">
-              <h1 className={'uppercase font-bold pl-8 ' + fugaz.className}>
+              <h1 className={'uppercase font-bold pl-8 text-2xl bg-gradient-to-r from-orange-500 to-gray-300 bg-clip-text text-transparent ' + rubik.className}>
                 emmax
               </h1>
               <div
