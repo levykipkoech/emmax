@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { db } from '@/firebase';
 import {
@@ -83,6 +83,7 @@ export default function ProductForm() {
   };
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <div>
       <div className="sticky top-0 mb-4">
         <Navbar />
@@ -142,5 +143,6 @@ export default function ProductForm() {
         </form>
       </div>
     </div>
+    </Suspense>
   );
 }
