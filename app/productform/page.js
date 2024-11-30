@@ -1,193 +1,144 @@
 'use client';
-import { Fugaz_One, Quattrocento, Rubik_Wet_Paint } from 'next/font/google';
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { db } from '@/firebase';
 import {
-  collection,
   doc,
   getDoc,
   addDoc,
-  deleteDoc,
   updateDoc,
   serverTimestamp,
-  query,
-  orderBy,
+  collection,
 } from 'firebase/firestore';
-import Product from '../products/page';
 import Navbar from '../(components)/Navbar';
 
-const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
-const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
-
-async function addProductToFirestore(
-  name,
-  buyingPrice,
-  sellingPrice,
-  quantity
-) {
-  try {
-    const docRef = await addDoc(collection(db, 'products'), {
-      name: name,
-      buyingPrice: buyingPrice,
-      sellingPrice: sellingPrice,
-      quantity: quantity,
-    });
-    console.log('product added with id:', docRef.id);
-    return true;
-  } catch (error) {
-    console.error('error adding prodct', error);
-    return false;
-  }
-}
 export default function ProductForm() {
   const [name, setName] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
   const [buyingPrice, setBuyingPrice] = useState('');
   const [quantity, setQuantity] = useState('');
-
-  const [products, setProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const productId = searchParams.get('id');
+  const productId = searchParams?.get('id');
 
   useEffect(() => {
     async function fetchProduct() {
       if (productId) {
-        const productRef = doc(db, 'products', productId);
-        const productSnap = await getDoc(productRef);
-        if (productSnap.exists()) {
-          const productData = productSnap.data();
-          setName(productData.name);
-          setBuyingPrice(productData.buyingPrice);
-          setSellingPrice(productData.sellingPrice);
-          setQuantity(productData.quantity);
-          setIsUpdateMode(true);
-        } else {
-          console.error('Product not found');
+        try {
+          const productRef = doc(db, 'products', productId);
+          const productSnap = await getDoc(productRef);
+
+          if (productSnap.exists()) {
+            const productData = productSnap.data();
+            setName(productData.name || '');
+            setBuyingPrice(productData.buyingPrice || '');
+            setSellingPrice(productData.sellingPrice || '');
+            setQuantity(productData.quantity || '');
+            setIsUpdateMode(true);
+          } else {
+            console.error('Product not found');
+          }
+        } catch (error) {
+          console.error('Failed to fetch product:', error);
         }
       }
     }
     fetchProduct();
   }, [productId]);
 
-  const handleUpdate = async (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
+
+    if (!name || !buyingPrice || !sellingPrice || !quantity) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    const productData = {
+      name,
+      buyingPrice: Number(buyingPrice),
+      sellingPrice: Number(sellingPrice),
+      quantity: Number(quantity),
+      updatedAt: serverTimestamp(),
+    };
+
     try {
       if (isUpdateMode && productId) {
-        const updatedProduct = {
-          name,
-          buyingPrice: Number(buyingPrice),
-          sellingPrice: Number(sellingPrice),
-          quantity: Number(quantity),
-          updatedAt: serverTimestamp(),
-        };
         const productRef = doc(db, 'products', productId);
-        await updateDoc(productRef, updatedProduct);
-
+        await updateDoc(productRef, productData);
         alert('Product updated successfully');
-        router.push('/products');
       } else {
-        const added = await addProductToFirestore(
-          name,
-          Number(buyingPrice),
-          Number(sellingPrice),
-          Number(quantity)
-        );
-        if (added) {
-          alert('Product added successfully');
-          setName('');
-          setBuyingPrice('');
-          setSellingPrice('');
-          setQuantity('');
-          router.push('/products');
-        }
+        const docRef = await addDoc(collection(db, 'products'), productData);
+        console.log('New product added:', docRef.id);
+        alert('Product created successfully');
       }
+
+      router.push('/products'); // Redirect to product list
     } catch (error) {
-      console.error('Failed to save product', error);
+      console.error('Error saving product:', error);
+      alert('Failed to save product. Try again later.');
     }
   };
 
-  const handleUpdateClick = (product) => {
-    setName(product.name || '');
-    setBuyingPrice(product.buyingPrice || '');
-    setSellingPrice(product.sellingPrice || '');
-    setQuantity(product.quantity || '');
-
-    setSelectedProduct(product);
-    setIsUpdateMode(true);
-  };
-
   return (
-    <div className="">
-      <div className="mb-4 sticky top-0 ">
+    <div>
+      <div className="sticky top-0 mb-4">
         <Navbar />
       </div>
 
-      <div className="flex justify-center capitalize h-screen  ">
-        <form className="flex-1 flex flex-col justify-center items-center gap-4">
-          <h3 className={'text-xl sm:text-3xl ' + fugaz.className}>
+      <div className="flex justify-center h-screen">
+        <form
+          onSubmit={handleSave}
+          className="flex flex-col gap-4 max-w-lg w-full p-4"
+        >
+          <h3 className="text-3xl font-bold text-center">
             {isUpdateMode ? 'Update Product' : 'Create Product'}
           </h3>
-          <label>name: </label>
+
+          <label className="font-semibold">Name:</label>
           <input
-            className="w-full max-w-[400px] mx-auto px-4 py-2 duration-300 hover:border-indigo-600 focus:border-indigo-600
-    sm:py-3 border-solid border-2 border-indigo-400 rounded-lg outline-none"
-            id="name"
-            name="name"
             type="text"
-            required
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="border-2 rounded-md p-2 w-full"
+            required
           />
 
-          <label>Buying price: </label>
+          <label className="font-semibold">Buying Price:</label>
           <input
-            className="w-full max-w-[400px] mx-auto px-4 py-2 duration-300 hover:border-indigo-600 focus:border-indigo-600
-    sm:py-3 border-solid border-2 border-indigo-400 rounded-lg outline-none"
-            id="buyingprice"
-            name="buying price"
             type="number"
-            required
             value={buyingPrice}
             onChange={(e) => setBuyingPrice(e.target.value)}
+            className="border-2 rounded-md p-2 w-full"
+            required
           />
 
-          <label>selling price:</label>
+          <label className="font-semibold">Selling Price:</label>
           <input
-            className="w-full max-w-[400px] mx-auto px-4 py-2 duration-300 hover:border-indigo-600 focus:border-indigo-600
-    sm:py-3 border-solid border-2 border-indigo-400 rounded-lg outline-none"
-            id="sellingPrice"
-            name="sellingPrice"
             type="number"
-            required
             value={sellingPrice}
             onChange={(e) => setSellingPrice(e.target.value)}
+            className="border-2 rounded-md p-2 w-full"
+            required
           />
 
-          <label>quantity:</label>
+          <label className="font-semibold">Quantity:</label>
           <input
-            className="w-full max-w-[400px] mx-auto px-4 py-2 duration-300 hover:border-indigo-600 focus:border-indigo-600
-    sm:py-3 border-solid border-2 border-indigo-400 rounded-lg outline-none"
-            id="quantity"
-            name="quantity"
             type="number"
-            required
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
+            className="border-2 rounded-md p-2 w-full"
+            required
           />
 
           <button
             type="submit"
-            onClick={handleUpdate}
-            className="rounded-full bg-orange-600 hover:bg-orange-300 hover:scale-105 ease-in duration-300  m-3 p-2"
+            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800"
           >
-            {isUpdateMode ? 'Update product ' : 'Create Product'}
+            {isUpdateMode ? 'Update Product' : 'Create Product'}
           </button>
-          
         </form>
       </div>
     </div>
