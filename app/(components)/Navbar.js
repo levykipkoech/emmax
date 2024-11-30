@@ -52,28 +52,28 @@ export default function Navbar() {
           <div className="justify-end">
             <ul className=" hidden md:flex p-2  ">
               <Link href="/">
-                <li className="p-2 m-3 rounded-xl  bg-gray-600 hover:scale-105 ease-in duration-300 text-white">
+                <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white">
                   home
                 </li>
               </Link>
               <Link href="/products">
-                <li className="p-2 m-3 rounded-xl  bg-gray-600 hover:scale-105 ease-in duration-300 text-white">
+                <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white">
                   products
                 </li>
               </Link>
               <Link href="/productform">
-                <li className="p-2 m-3 rounded-xl  bg-gray-600  hover:scale-105 ease-in duration-300 text-white">
+                <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900  hover:scale-105 ease-in duration-300 text-white">
                   create product
                 </li>
               </Link>
               <Link href="/dashboard">
-                <li className="p-2 m-3 rounded-xl  bg-gray-600  hover:scale-105 ease-in duration-300 text-white">
+                <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900  hover:scale-105 ease-in duration-300 text-white">
                   Dashboard
                 </li>
               </Link>
 
               <Link href="/login">
-                <li className="p-2 m-3 rounded-xl bg-gray-600  hover:scale-105 ease-in duration-300 text-white">
+                <li className="p-2 m-3 rounded-xl bg-orange-900 hover:bg-gray-900  hover:scale-105 ease-in duration-300 text-white">
                   <Logout />
                 </li>
               </Link>

@@ -1,9 +1,19 @@
-"use client"
+'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { db } from '@/firebase';
-import { doc, getDoc, addDoc, updateDoc, serverTimestamp, collection } from 'firebase/firestore';
+import {
+  doc,
+  getDoc,
+  addDoc,
+  updateDoc,
+  serverTimestamp,
+  collection,
+} from 'firebase/firestore';
 import Navbar from '../(components)/Navbar';
+import { Fugaz_One } from 'next/font/google';
+
+const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 
 export default function ProductForm() {
   const [name, setName] = useState('');
@@ -87,11 +97,21 @@ export default function ProductForm() {
           onSubmit={handleSave}
           className="flex flex-col gap-4 max-w-lg w-full p-4"
         >
-          <h3 className="text-3xl font-bold text-center">
+          <h3
+            className={
+              'text-3xl text-center bg-gradient-to-r from-red-400 to-green-400 bg-clip-text text-transparent ' +
+              fugaz.className
+            }
+          >
             {isUpdateMode ? 'Update Product' : 'Create Product'}
           </h3>
 
-          <label className="font-semibold" htmlFor="name">Name:</label>
+          <label
+            className={'font-semibold text-orange-400 ' + fugaz.className}
+            htmlFor="name"
+          >
+            Name:
+          </label>
           <input
             id="name"
             type="text"
@@ -102,7 +122,12 @@ export default function ProductForm() {
             aria-label="Product name"
           />
 
-          <label className="font-semibold" htmlFor="buyingPrice">Buying Price:</label>
+          <label
+            className={'font-semibold text-orange-400 ' + fugaz.className}
+            htmlFor="buyingPrice"
+          >
+            Buying Price:
+          </label>
           <input
             id="buyingPrice"
             type="number"
@@ -113,7 +138,12 @@ export default function ProductForm() {
             aria-label="Buying price"
           />
 
-          <label className="font-semibold" htmlFor="sellingPrice">Selling Price:</label>
+          <label
+            className={'font-semibold text-orange-400 ' + fugaz.className}
+            htmlFor="sellingPrice"
+          >
+            Selling Price:
+          </label>
           <input
             id="sellingPrice"
             type="number"
@@ -124,7 +154,12 @@ export default function ProductForm() {
             aria-label="Selling price"
           />
 
-          <label className="font-semibold" htmlFor="quantity">Quantity:</label>
+          <label
+            className={'font-semibold text-orange-400 ' + fugaz.className}
+            htmlFor="quantity"
+          >
+            Quantity:
+          </label>
           <input
             id="quantity"
             type="number"
@@ -137,7 +172,7 @@ export default function ProductForm() {
 
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800"
+            className={"bg-orange-600 text-white py-2 px-4 mt-4 rounded-md hover:bg-orange-800 " + fugaz.className}
           >
             {isUpdateMode ? 'Update Product' : 'Create Product'}
           </button>
