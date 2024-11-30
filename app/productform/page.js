@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { db } from '@/firebase';
 import {
@@ -83,7 +83,6 @@ export default function ProductForm() {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
     <div>
       <div className="sticky top-0 mb-4">
         <Navbar />
@@ -98,40 +97,48 @@ export default function ProductForm() {
             {isUpdateMode ? 'Update Product' : 'Create Product'}
           </h3>
 
-          <label className="font-semibold">Name:</label>
+          <label className="font-semibold" htmlFor="name">Name:</label>
           <input
+            id="name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
+            aria-label="Product name"
           />
 
-          <label className="font-semibold">Buying Price:</label>
+          <label className="font-semibold" htmlFor="buyingPrice">Buying Price:</label>
           <input
+            id="buyingPrice"
             type="number"
             value={buyingPrice}
             onChange={(e) => setBuyingPrice(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
+            aria-label="Buying price"
           />
 
-          <label className="font-semibold">Selling Price:</label>
+          <label className="font-semibold" htmlFor="sellingPrice">Selling Price:</label>
           <input
+            id="sellingPrice"
             type="number"
             value={sellingPrice}
             onChange={(e) => setSellingPrice(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
+            aria-label="Selling price"
           />
 
-          <label className="font-semibold">Quantity:</label>
+          <label className="font-semibold" htmlFor="quantity">Quantity:</label>
           <input
+            id="quantity"
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
+            aria-label="Quantity"
           />
 
           <button
@@ -143,6 +150,5 @@ export default function ProductForm() {
         </form>
       </div>
     </div>
-    </Suspense>
   );
 }
