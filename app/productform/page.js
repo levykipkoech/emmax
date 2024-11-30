@@ -2,14 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { db } from '@/firebase';
-import {
-  doc,
-  getDoc,
-  addDoc,
-  updateDoc,
-  serverTimestamp,
-  collection,
-} from 'firebase/firestore';
+import { doc, getDoc, addDoc, updateDoc, serverTimestamp, collection } from 'firebase/firestore';
 import Navbar from '../(components)/Navbar';
 
 export default function ProductForm() {
@@ -21,30 +14,31 @@ export default function ProductForm() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const productId = searchParams?.get('id');
+  const productId = searchParams?.get('id'); // Safely get the search parameter
 
   useEffect(() => {
-    async function fetchProduct() {
-      if (productId) {
-        try {
-          const productRef = doc(db, 'products', productId);
-          const productSnap = await getDoc(productRef);
+    if (!productId) return;
 
-          if (productSnap.exists()) {
-            const productData = productSnap.data();
-            setName(productData.name || '');
-            setBuyingPrice(productData.buyingPrice || '');
-            setSellingPrice(productData.sellingPrice || '');
-            setQuantity(productData.quantity || '');
-            setIsUpdateMode(true);
-          } else {
-            console.error('Product not found');
-          }
-        } catch (error) {
-          console.error('Failed to fetch product:', error);
+    async function fetchProduct() {
+      try {
+        const productRef = doc(db, 'products', productId);
+        const productSnap = await getDoc(productRef);
+
+        if (productSnap.exists()) {
+          const productData = productSnap.data();
+          setName(productData.name || '');
+          setBuyingPrice(productData.buyingPrice || '');
+          setSellingPrice(productData.sellingPrice || '');
+          setQuantity(productData.quantity || '');
+          setIsUpdateMode(true);
+        } else {
+          console.error('Product not found');
         }
+      } catch (error) {
+        console.error('Failed to fetch product:', error);
       }
     }
+
     fetchProduct();
   }, [productId]);
 
