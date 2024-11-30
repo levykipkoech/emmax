@@ -21,7 +21,8 @@ const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 async function fetchProductsFromFirestore() {
   try {
     const productCollection = query(collection(db, 'products'));
-    const querySnapshot = await getDocs(productCollection);
+    const productsQuery = query(productCollection, orderBy('createdAt', 'desc')); 
+    const querySnapshot = await getDocs(productsQuery);
     const products = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),

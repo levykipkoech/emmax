@@ -36,7 +36,7 @@ export default function Navbar() {
       <div
         className={" " + fugaz.className}
       >
-        <div className="flex justify-between items-center ">
+        <div className="flex justify-between items-center pt-4 ">
           <Link href="/">
             <h1
               className={
@@ -80,7 +80,7 @@ export default function Navbar() {
           </div>
           <div
             onClick={handleNav}
-            className="md:hidden text-3xl rounded-full hover:cursor-pointer bg-gray-700 text-orange-700 p-1"
+            className="md:hidden text-3xl rounded-full hover:cursor-pointer bg-gray-700 text-orange-700 p-1 mr-3"
           >
             <RiMenu4Fill />
           </div>

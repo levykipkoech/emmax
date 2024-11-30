@@ -65,6 +65,7 @@ export default function ProductForm() {
       buyingPrice: Number(buyingPrice),
       sellingPrice: Number(sellingPrice),
       quantity: Number(quantity),
+      createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
 
