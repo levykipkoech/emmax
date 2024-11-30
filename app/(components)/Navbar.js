@@ -71,11 +71,7 @@ export default function Navbar() {
                   Dashboard
                 </li>
               </Link>
-              <Link href="/login">
-                <li className="p-2 m-3 rounded-xl bg-gray-600  hover:scale-105 ease-in duration-300 text-white">
-                  sign up
-                </li>
-              </Link>
+
               <Link href="/login">
                 <li className="p-2 m-3 rounded-xl bg-gray-600  hover:scale-105 ease-in duration-300 text-white">
                   <Logout />
@@ -85,14 +81,16 @@ export default function Navbar() {
           </div>
           <div
             onClick={handleNav}
-            className="md:hidden text-3xl rounded-full bg-[#567C8D] p-1"
+            className="md:hidden text-3xl rounded-full hover:cursor-pointer bg-gray-700 text-orange-700 p-1"
           >
             <RiMenu4Fill />
           </div>
         </div>
       </div>
       <div
-        className={nav ? 'md:hidden fixed left-0 top-0 w-full h-screen bg-black/70' : ''}
+        className={
+          nav ? 'md:hidden fixed left-0 top-0 w-full h-screen bg-black/70' : ''
+        }
       >
         <div
           className={
@@ -107,11 +105,11 @@ export default function Navbar() {
                 emmax
               </h1>
               <div
-            onClick={handleNav}
-            className="md:hidden text-3xl rounded-full bg-[#567C8D] p-1"
-          >
-            <AiOutlineClose />
-          </div>
+                onClick={handleNav}
+                className="md:hidden text-3xl rounded-full bg-gray-700 text-orange-700 p-1 hover:cursor-pointer"
+              >
+                <AiOutlineClose />
+              </div>
             </div>
 
             <ul className="capitalize flex flex-col text-xl">
@@ -131,11 +129,6 @@ export default function Navbar() {
                 </li>
               </Link>
 
-              <Link href="/login">
-                <li onClick={() => setNav(false)} className="p-4">
-                  sign up
-                </li>
-              </Link>
               <Link href="/login">
                 <li onClick={() => setNav(false)} className="p-4">
                   <Logout />
