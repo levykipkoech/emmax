@@ -113,6 +113,11 @@ export default function Navbar() {
             </div>
 
             <ul className="capitalize flex flex-col text-xl">
+            <Link href="/">
+                <li onClick={() => setNav(false)} className="p-4 ">
+                  home
+                </li>
+              </Link>
               <Link href="/products">
                 <li onClick={() => setNav(false)} className="p-4 ">
                   products
