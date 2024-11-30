@@ -29,13 +29,12 @@ export default function Navbar() {
   };
 
   return (
-    <div className={'pt-3 ' + fugaz.className}>
+    <div className={ shadow
+            ? 'sticky tot-0 h-20 shadow-xl z-[100] bg-gradient-to-r from-gray-700 to-orange-700 '
+            : 'sticky tot-0 h-20 z-[100] ' + fugaz.className}>
+      
       <div
-        className={
-          shadow
-            ? 'sticky w-full h-20 shadow-xl z-[100] bg-gradient-to-r from-gray-700 to-orange-700 '
-            : 'sticky w-full h-20 z-[100] '
-        }
+        className={" " + fugaz.className}
       >
         <div className="flex justify-between items-center ">
           <Link href="/">
@@ -87,6 +86,7 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+      
       <div
         className={
           nav ? 'md:hidden fixed left-0 top-0 w-full h-screen bg-black/70' : ''
@@ -113,7 +113,7 @@ export default function Navbar() {
             
             </div>
 
-            <ul className="capitalize flex flex-col text-xl">
+            <ul className={"capitalize flex flex-col text-xl " + fugaz.className}>
             <Link href="/">
                 <li onClick={() => setNav(false)} className="p-4 ">
                   home
