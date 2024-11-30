@@ -21,7 +21,10 @@ const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 async function fetchProductsFromFirestore() {
   try {
     const productCollection = query(collection(db, 'products'));
-    const productsQuery = query(productCollection, orderBy('createdAt', 'desc')); 
+    const productsQuery = query(
+      productCollection,
+      orderBy('createdAt', 'desc')
+    );
     const querySnapshot = await getDocs(productsQuery);
     const products = querySnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -47,6 +50,8 @@ async function deleteProductFromFirestore(productId) {
 
 export default function Product() {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -56,6 +61,19 @@ export default function Product() {
     }
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredProducts(products);
+    } else {
+      const lowerCaseQuery = searchQuery.toLowerCase();
+      setFilteredProducts(
+        products.filter((prod) =>
+          prod.name.toLowerCase().includes(lowerCaseQuery)
+        )
+      );
+    }
+  }, [searchQuery, products]);
 
   const handleUpdateClick = (product) => {
     router.push(`/productform?id=${product.id}`); // Navigate to the form with product ID
@@ -72,36 +90,48 @@ export default function Product() {
       <h1 className="sticky top-0 ">
         <Navbar />
       </h1>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4  text-md">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="bg-gradient-to-tl from-orange-700 to-gray-600 text-white shadow-md shadow-gray-400 capitalize rounded-xl p-4 text-center overflow-hidden transition "
-          >
-            <div className="border-b-2 rounded-md pb-2 uppercase font-semibold">
-              <p>{product.name}</p>
+      <div className="h-screen">
+        <div className='place-items-end '>
+          <input
+            type="text"
+            placeholder="Search by product name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className=" p-2 m-4  border border-gray-300 rounded-lg flex justify-end"
+          />
+        </div>
+
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4  text-md">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-gradient-to-tl from-orange-700 to-gray-600 text-white shadow-md shadow-gray-400 capitalize rounded-xl p-4 text-center overflow-hidden transition "
+            >
+              <div className="border-b-2 rounded-md pb-2 uppercase font-semibold">
+                <p>{product.name}</p>
+              </div>
+              <div className="flex justify-between pt-2 text-md">
+                <p>BP: {product.buyingPrice}</p>
+                <p>SP: {product.sellingPrice}</p>
+              </div>
+              <p className="pt-2 ">Quantity: {product.quantity}</p>
+              <div className="flex justify-between gap-12 pt-4">
+                <button
+                  onClick={() => handleDelete(product.id)}
+                  className="bg-red-300  hover:bg-red-400 shadow-md shadow-gray-500 rounded-full px-4 py-2 transition hover:scale-105 ease-in duration-100  "
+                >
+                  <MdDelete />
+                </button>
+                <button
+                  onClick={() => handleUpdateClick(product)}
+                  className="bg-orange-300 hover:bg-orange-400 shadow-md shadow-gray-500 rounded-full text-xl px-4 py-2 transition hover:scale-105 ease-in duration-100  "
+                >
+                  <MdModeEdit />
+                </button>
+              </div>
             </div>
-            <div className="flex justify-between pt-2 text-md">
-              <p>BP: {product.buyingPrice}</p>
-              <p>SP: {product.sellingPrice}</p>
-            </div>
-            <p className="pt-2 ">Quantity: {product.quantity}</p>
-            <div className="flex justify-between gap-12 pt-4">
-              <button
-                onClick={() => handleDelete(product.id)}
-                className="bg-red-300  hover:bg-red-400 shadow-md shadow-gray-500 rounded-full px-4 py-2 transition hover:scale-105 ease-in duration-100  "
-              >
-                <MdDelete />
-              </button>
-              <button
-                onClick={() => handleUpdateClick(product)}
-                className="bg-orange-300 hover:bg-orange-400 shadow-md shadow-gray-500 rounded-full text-xl px-4 py-2 transition hover:scale-105 ease-in duration-100  "
-              >
-                <MdModeEdit />
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -11,6 +11,8 @@ const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 
 export default function SalesHistory() {
   const [sales, setSales] = useState([]);
+  const [filteredSales, setFilteredSales] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     async function fetchSales() {
@@ -27,6 +29,19 @@ export default function SalesHistory() {
     fetchSales();
   }, []);
 
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredSales(sales);
+    } else {
+      const lowerCaseQuery = searchQuery.toLowerCase();
+      setFilteredSales(
+        sales.filter((sale) =>
+          sale.productName.toLowerCase().includes(lowerCaseQuery)
+        )
+      );
+    }
+  }, [searchQuery, sales]);
+
   return (
     <div className="p-4">
       <div className="sticky top-0 h-full">
@@ -42,25 +57,59 @@ export default function SalesHistory() {
           >
             Sales History
           </h2>
-          <button className='items-end p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white w-auto '>
-          <Link href={'salesForm'}>add sales</Link>
+        </div>
+        <div className='flex justify-end align-center'>
+          <button className=" p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white w-auto ">
+            <Link href={'/salesForm'}>add sales</Link>
           </button>
-          
+          <input
+            type="text"
+            placeholder="Search by product name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className=" p-2 m-3 border border-gray-300 rounded-lg"
+          />
         </div>
 
         <ul className="text-md text-orange-50 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4  text-md rounded-xl">
-          {sales.map((sale) => (
-            <li key={sale.id} className="mb-4 rounded-xl shadow-md shadow-gray-900 p-3">
-              <div>Product:  <span className='pl-3 text-blue-300'> {sale.productName}</span></div>
-              <div>Quantity:  <span className='pl-3 text-blue-300'> {sale.quantity}</span></div>
-              <div>Total Price: <span className='pl-3 text-blue-300'>  ksh {sale.totalPrice}</span></div>
-              <div>Customer:  <span className='pl-3 text-blue-300'> {sale.customerName || 'N/A'}</span></div>
+          {filteredSales.map((sale) => (
+            <li
+              key={sale.id}
+              className="mb-4 rounded-xl shadow-md shadow-gray-900 p-3"
+            >
               <div>
-                Date: <span className='pl-3 text-blue-300'> {sale.timestamp?.toDate().toLocaleString() || 'Unknown'}</span>
+                Product:{' '}
+                <span className="pl-3 text-blue-300"> {sale.productName}</span>
+              </div>
+              <div>
+                Quantity:{' '}
+                <span className="pl-3 text-blue-300"> {sale.quantity}</span>
+              </div>
+              <div>
+                Total Price:{' '}
+                <span className="pl-3 text-blue-300">
+                  {' '}
+                  ksh {sale.totalPrice}
+                </span>
+              </div>
+              <div>
+                Customer:{' '}
+                <span className="pl-3 text-blue-300">
+                  {' '}
+                  {sale.customerName || 'N/A'}
+                </span>
+              </div>
+              <div>
+                Date:{' '}
+                <span className="pl-3 text-blue-300">
+                  {' '}
+                  {sale.timestamp?.toDate().toLocaleString() || 'Unknown'}
+                </span>
               </div>
             </li>
           ))}
         </ul>
+        {filteredSales.length === 0 && <p>No sales match your search query.</p>}
       </div>
     </div>
   );
