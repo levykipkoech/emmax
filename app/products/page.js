@@ -65,11 +65,11 @@ export default function Product() {
   };
 
   return (
-    <div className="h-screen overflow-auto text-md">
-      <h1>
+    <div className=" ">
+      <h1 className='sticky top-0 h-20'>
         <Navbar />
       </h1>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4  text-md">
         {products.map((product) => (
           <div
             key={product.id}

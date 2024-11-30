@@ -122,12 +122,12 @@ export default function ProductForm() {
   };
 
   return (
-    <div className="h-screen">
-      <div className="mb-4">
+    <div className="">
+      <div className="mb-4 sticky top-0 ">
         <Navbar />
       </div>
 
-      <div className="flex justify-center capitalize ">
+      <div className="flex justify-center capitalize h-screen  ">
         <form className="flex-1 flex flex-col justify-center items-center gap-4">
           <h3 className={'text-xl sm:text-3xl ' + fugaz.className}>
             {isUpdateMode ? 'Update Product' : 'Create Product'}
@@ -187,6 +187,7 @@ export default function ProductForm() {
           >
             {isUpdateMode ? 'Update product ' : 'Create Product'}
           </button>
+          
         </form>
       </div>
     </div>

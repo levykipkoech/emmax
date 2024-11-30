@@ -14,7 +14,7 @@ export default function Logout() {
 
   if (pathname === '/') {
     return (
-      <Link href={'/dashboard'}>
+      <Link href={'/'}>
         <button>go to dashboard</button>
       </Link>
     );
