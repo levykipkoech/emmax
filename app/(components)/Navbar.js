@@ -6,9 +6,9 @@ import { IoMdClose } from "react-icons/io";
 import Link from 'next/link';
 import Logout from './Logout';
 
-const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
-const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 
+const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
+const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 export default function Navbar() {
   const [nav, setNav] = useState(false);
   const [shadow, setShadow] = useState(false);
@@ -30,8 +30,8 @@ export default function Navbar() {
 
   return (
     <div className={ shadow
-            ? 'sticky tot-0 h-20 shadow-xl z-[100] bg-gradient-to-r from-gray-700 to-orange-700 '
-            : 'sticky tot-0 h-20 z-[100] ' + fugaz.className}>
+            ? 'sticky top-0 h-20 shadow-xl z-[100] bg-gradient-to-r from-gray-700 to-orange-700 '
+            : 'sticky top-0 h-20 z-[100] ' + fugaz.className}>
       
       <div
         className={" " + fugaz.className}
