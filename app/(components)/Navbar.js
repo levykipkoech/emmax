@@ -139,7 +139,11 @@ export default function Navbar() {
                   dashboard
                 </li>
               </Link>
-
+              <Link href="/sales">
+                <li onClick={() => setNav(false)} className="p-4">
+                sales
+                </li>
+              </Link>
               <Link href="/login">
                 <li onClick={() => setNav(false)} className="p-4">
                   <Logout />
