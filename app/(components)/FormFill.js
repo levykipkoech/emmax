@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { db } from '@/firebase';
@@ -12,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import Navbar from '../(components)/Navbar';
 import { Fugaz_One } from 'next/font/google';
+import { useAuth } from '@/context/Authcontext';
 
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 
@@ -21,15 +23,29 @@ export default function ProductForm() {
   const [buyingPrice, setBuyingPrice] = useState('');
   const [quantity, setQuantity] = useState('');
   const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
+  const { role, currentUser } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const productId = searchParams?.get('id'); // Safely get the search parameter
+  const productId = searchParams?.get('id');
 
+  // Check user role and redirect if not admin
+  useEffect(() => {
+    if (role === 'admin') {
+      setIsAuthorized(true);
+    } else {
+      alert('Only admins can access this page');
+      router.push('/dashboard');
+    }
+  }, [role, router]);
+
+  // Fetch product data for editing
   useEffect(() => {
     if (!productId) return;
 
-    async function fetchProduct() {
+    const fetchProduct = async () => {
       try {
         const productRef = doc(db, 'products', productId);
         const productSnap = await getDoc(productRef);
@@ -47,45 +63,64 @@ export default function ProductForm() {
       } catch (error) {
         console.error('Failed to fetch product:', error);
       }
-    }
+    };
 
     fetchProduct();
   }, [productId]);
 
+  // Handle form submission
   const handleSave = async (e) => {
     e.preventDefault();
+    if (isSubmitting || role !== 'admin') return;
 
-    if (!name || !buyingPrice || !sellingPrice || !quantity) {
-      alert('Please fill in all fields');
-      return;
-    }
-
-    const productData = {
-      name,
-      buyingPrice: Number(buyingPrice),
-      sellingPrice: Number(sellingPrice),
-      quantity: Number(quantity),
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    };
+    setIsSubmitting(true);
 
     try {
+      // Validate input fields
+      if (
+        !name.trim() ||
+        Number(buyingPrice) <= 0 ||
+        Number(sellingPrice) <= 0 ||
+        Number(quantity) < 0
+      ) {
+        alert('Please fill in all fields correctly.');
+        return;
+      }
+
+      const productData = {
+        name,
+        buyingPrice: Number(buyingPrice),
+        sellingPrice: Number(sellingPrice),
+        quantity: Number(quantity),
+        updatedAt: serverTimestamp(),
+        ...(isUpdateMode ? {} : { createdAt: serverTimestamp() }),
+      };
+
       if (isUpdateMode && productId) {
+        // Update existing product
         const productRef = doc(db, 'products', productId);
         await updateDoc(productRef, productData);
         alert('Product updated successfully');
       } else {
-        const docRef = await addDoc(collection(db, 'products'), productData);
-        console.log('New product added:', docRef.id);
+        // Create new product
+        await addDoc(collection(db, 'products'), productData);
         alert('Product created successfully');
+        setName('');
+        setBuyingPrice('');
+        setSellingPrice('');
+        setQuantity('');
       }
 
-      router.push('/products'); // Redirect to product list
+      router.push('/products');
     } catch (error) {
       console.error('Error saving product:', error);
       alert('Failed to save product. Try again later.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  if (!isAuthorized) return null; // Prevent rendering until authorization is confirmed
 
   return (
     <div>
@@ -107,10 +142,7 @@ export default function ProductForm() {
             {isUpdateMode ? 'Update Product' : 'Create Product'}
           </h3>
 
-          <label
-            className={'font-semibold text-orange-400 ' + fugaz.className}
-            htmlFor="name"
-          >
+          <label className="font-semibold text-orange-400" htmlFor="name">
             Name:
           </label>
           <input
@@ -120,11 +152,10 @@ export default function ProductForm() {
             onChange={(e) => setName(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
-            aria-label="Product name"
           />
 
           <label
-            className={'font-semibold text-orange-400 ' + fugaz.className}
+            className="font-semibold text-orange-400"
             htmlFor="buyingPrice"
           >
             Buying Price:
@@ -136,11 +167,10 @@ export default function ProductForm() {
             onChange={(e) => setBuyingPrice(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
-            aria-label="Buying price"
           />
 
           <label
-            className={'font-semibold text-orange-400 ' + fugaz.className}
+            className="font-semibold text-orange-400"
             htmlFor="sellingPrice"
           >
             Selling Price:
@@ -152,13 +182,9 @@ export default function ProductForm() {
             onChange={(e) => setSellingPrice(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
-            aria-label="Selling price"
           />
 
-          <label
-            className={'font-semibold text-orange-400 ' + fugaz.className}
-            htmlFor="quantity"
-          >
+          <label className="font-semibold text-orange-400" htmlFor="quantity">
             Quantity:
           </label>
           <input
@@ -168,12 +194,11 @@ export default function ProductForm() {
             onChange={(e) => setQuantity(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
-            aria-label="Quantity"
           />
 
           <button
             type="submit"
-            className={"bg-orange-600 text-white py-2 px-4 mt-4 rounded-md hover:bg-orange-800 " + fugaz.className}
+            className="bg-orange-600 text-white py-2 px-4 mt-4 rounded-md hover:bg-orange-800"
           >
             {isUpdateMode ? 'Update Product' : 'Create Product'}
           </button>

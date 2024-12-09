@@ -5,6 +5,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { logSale } from '../utils/LogSale';
 import Navbar from '../(components)/Navbar';
 import { Fugaz_One } from 'next/font/google';
+import { useRouter} from 'next/navigation';
 
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 export default function SalesForm() {
@@ -12,9 +13,9 @@ export default function SalesForm() {
   const [selectedProduct, setSelectedProduct] = useState('');
   const [quantity, setQuantity] = useState('');
   const [customerName, setCustomerName] = useState('');
-
+  const router = useRouter();
   useEffect(() => {
-    async function fetchProducts() {
+    async function fetchSales() {
       const productsRef = collection(db, 'products');
       const querySnapshot = await getDocs(productsRef);
       const fetchedProducts = [];
@@ -23,7 +24,7 @@ export default function SalesForm() {
       });
       setProducts(fetchedProducts);
     }
-    fetchProducts();
+    fetchSales();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -41,7 +42,9 @@ export default function SalesForm() {
       setSelectedProduct('');
       setQuantity('');
       setCustomerName('');
+      router.push('/sales');
     }
+    
   };
 
   return (
