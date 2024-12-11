@@ -127,7 +127,7 @@ export default function ProductForm() {
         <Navbar />
       </div>
 
-      <div className="flex justify-center h-screen">
+      <div className="flex justify-center">
         <form
           onSubmit={handleSave}
           className="flex flex-col gap-4 max-w-lg w-full p-4"

@@ -137,6 +137,7 @@ export default function Product() {
           prev.filter((product) => product.id !== deletedId)
         );
       }
+      router.refresh()
     } catch (error) {
       console.error('Failed to delete product:', error);
       alert('An error occurred while deleting the product.');
@@ -148,7 +149,7 @@ export default function Product() {
   return (
     <div>
       <Navbar />
-      <div className="h-screen">
+      <div className="">
         {/* Categories */}
         {!showProducts ? (
           <div>
@@ -200,7 +201,7 @@ export default function Product() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products..."
+                  placeholder="Search product by name..."
                   className="p-2 m-4 border border-gray-300 rounded-lg"
                 />
               </div>

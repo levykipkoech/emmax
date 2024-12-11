@@ -2,7 +2,6 @@ import { Fugaz_One, Open_Sans, Rubik_Wet_Paint } from 'next/font/google';
 import './globals.css';
 import Navbar from './(components)/Navbar';
 import { AuthProvider } from '@/context/Authcontext';
-//import Head from './(components)/Head';
 
 const opensans = Open_Sans({ subsets: ['latin'] });
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
@@ -17,22 +16,26 @@ export default function RootLayout({ children }) {
   const header = <header className="pt-3"></header>;
   const footer = (
     <footer
-      className={'capitalize  text-white py-4 text-center ' + fugaz.className}
+      className={
+        'capitalize fixed bottom-0 left-0 w-full text-white py-4 text-center bg-gray-600 ' +
+        fugaz.className
+      }
     >
-      <p> © {new Date().getFullYear()} emmax. All rights reserved.</p>
+      <p>© {new Date().getFullYear()} emmax. All rights reserved.</p>
     </footer>
   );
+
   return (
     <html lang="en">
       <AuthProvider>
         <body
           className={
-            'w-full mx-auto text-base bg-gradient-to-r from-gray-800 to-orange-700 h-screen ' +
+            'w-full mx-auto text-base bg-gradient-to-r from-gray-800 to-orange-700 min-h-screen flex flex-col ' +
             opensans.className
           }
         >
           {header}
-          {children}
+          <main className="flex-grow mb-16">{children}</main>
           {footer}
         </body>
       </AuthProvider>

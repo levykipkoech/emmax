@@ -61,7 +61,7 @@ export default function Page() {
           emmax
         </h1>
       </Link>
-      <div className="flex-1 flex flex-col justify-center items-center gap-4 h-screen p-3 text-xl">
+      <div className="flex-1 flex flex-col justify-center items-center gap-4 p-3 text-xl">
         <h3 className={'text-5xl md:text-6xl ' + fugaz.className}>
           {isRegistered ? 'Register ' : 'Log in'}
         </h3>
