@@ -22,6 +22,7 @@ export default function ProductForm() {
   const [sellingPrice, setSellingPrice] = useState('');
   const [buyingPrice, setBuyingPrice] = useState('');
   const [quantity, setQuantity] = useState('');
+  const [category, setCategory] = useState(''); // New state for category
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -31,7 +32,6 @@ export default function ProductForm() {
   const searchParams = useSearchParams();
   const productId = searchParams?.get('id');
 
-  // Check user role and redirect if not admin
   useEffect(() => {
     if (role === 'admin') {
       setIsAuthorized(true);
@@ -41,7 +41,6 @@ export default function ProductForm() {
     }
   }, [role, router]);
 
-  // Fetch product data for editing
   useEffect(() => {
     if (!productId) return;
 
@@ -56,6 +55,7 @@ export default function ProductForm() {
           setBuyingPrice(productData.buyingPrice || '');
           setSellingPrice(productData.sellingPrice || '');
           setQuantity(productData.quantity || '');
+          setCategory(productData.category || ''); // Load category
           setIsUpdateMode(true);
         } else {
           console.error('Product not found');
@@ -68,7 +68,6 @@ export default function ProductForm() {
     fetchProduct();
   }, [productId]);
 
-  // Handle form submission
   const handleSave = async (e) => {
     e.preventDefault();
     if (isSubmitting || role !== 'admin') return;
@@ -76,12 +75,12 @@ export default function ProductForm() {
     setIsSubmitting(true);
 
     try {
-      // Validate input fields
       if (
         !name.trim() ||
         Number(buyingPrice) <= 0 ||
         Number(sellingPrice) <= 0 ||
-        Number(quantity) < 0
+        Number(quantity) < 0 ||
+        !category.trim() // Validate category
       ) {
         alert('Please fill in all fields correctly.');
         return;
@@ -92,23 +91,23 @@ export default function ProductForm() {
         buyingPrice: Number(buyingPrice),
         sellingPrice: Number(sellingPrice),
         quantity: Number(quantity),
+        category, // Include category
         updatedAt: serverTimestamp(),
         ...(isUpdateMode ? {} : { createdAt: serverTimestamp() }),
       };
 
       if (isUpdateMode && productId) {
-        // Update existing product
         const productRef = doc(db, 'products', productId);
         await updateDoc(productRef, productData);
         alert('Product updated successfully');
       } else {
-        // Create new product
         await addDoc(collection(db, 'products'), productData);
         alert('Product created successfully');
         setName('');
         setBuyingPrice('');
         setSellingPrice('');
         setQuantity('');
+        setCategory(''); // Reset category
       }
 
       router.push('/products');
@@ -120,7 +119,7 @@ export default function ProductForm() {
     }
   };
 
-  if (!isAuthorized) return null; // Prevent rendering until authorization is confirmed
+  if (!isAuthorized) return null;
 
   return (
     <div>
@@ -192,6 +191,18 @@ export default function ProductForm() {
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
+            className="border-2 rounded-md p-2 w-full"
+            required
+          />
+
+          <label className="font-semibold text-orange-400" htmlFor="category">
+            Category:
+          </label>
+          <input
+            id="category"
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
           />
