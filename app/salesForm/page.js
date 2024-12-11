@@ -1,21 +1,29 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from 'react';
 import { db } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { logSale } from '../utils/LogSale';
 import Navbar from '../(components)/Navbar';
 import { Fugaz_One } from 'next/font/google';
-import { useRouter} from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
+
 export default function SalesForm() {
   const [products, setProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState('');
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState('');
   const [customerName, setCustomerName] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [saleId, setSaleId] = useState(null);
+  const [originalQuantity, setOriginalQuantity] = useState(0);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   useEffect(() => {
-    async function fetchSales() {
+    async function fetchProducts() {
       const productsRef = collection(db, 'products');
       const querySnapshot = await getDocs(productsRef);
       const fetchedProducts = [];
@@ -24,8 +32,41 @@ export default function SalesForm() {
       });
       setProducts(fetchedProducts);
     }
-    fetchSales();
+    fetchProducts();
   }, []);
+
+  useEffect(() => {
+    const id = searchParams.get('id');
+    if (id && !searchParams.get('productId')) {
+      const fetchSale = async () => {
+        const saleRef = doc(db, 'sales', id);
+        const saleSnap = await getDoc(saleRef);
+        if (saleSnap.exists()) {
+          const saleData = saleSnap.data();
+          setIsEditing(true);
+          setSaleId(id);
+          setSearchTerm(saleData.productName);
+          setQuantity(saleData.quantity);
+          setCustomerName(saleData.customerName || '');
+          setSelectedProduct({ id: saleData.productId, name: saleData.productName });
+          setOriginalQuantity(Number(saleData.quantity));
+        }
+      };
+      fetchSale();
+    }
+  }, [searchParams]);
+  
+
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = products.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts([]);
+    }
+  }, [searchTerm, products]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,18 +74,57 @@ export default function SalesForm() {
       alert('Please fill out all required fields');
       return;
     }
-    const success = await logSale(
-      selectedProduct,
-      Number(quantity),
-      customerName
-    );
-    if (success) {
-      setSelectedProduct('');
-      setQuantity('');
-      setCustomerName('');
-      router.push('/sales');
+
+    if (isEditing) {
+      try {
+        const saleRef = doc(db, 'sales', saleId);
+        const productRef = doc(db, 'products', selectedProduct.id);
+        const productSnap = await getDoc(productRef);
+
+        if (!productSnap.exists()) {
+          alert('Product not found');
+          return;
+        }
+
+        const productData = productSnap.data();
+        const adjustedStock = productData.quantity + originalQuantity - Number(quantity);
+
+        if (adjustedStock < 0) {
+          alert('Insufficient stock to update sale');
+          return;
+        }
+
+        await updateDoc(saleRef, {
+          productId: selectedProduct.id,
+          productName: selectedProduct.name,
+          quantity: Number(quantity),
+          customerName,
+        });
+
+        await updateDoc(productRef, {
+          quantity: adjustedStock,
+        });
+
+        alert('Sale updated successfully!');
+        router.push('/sales');
+      } catch (error) {
+        console.error('Error updating sale:', error);
+        alert('Failed to update the sale.');
+      }
+    } else {
+      const success = await logSale(
+        selectedProduct.id,
+        Number(quantity),
+        customerName
+      );
+      if (success) {
+        setSearchTerm('');
+        setSelectedProduct(null);
+        setQuantity('');
+        setCustomerName('');
+        router.push('/sales');
+      }
     }
-    
   };
 
   return (
@@ -59,31 +139,50 @@ export default function SalesForm() {
             fugaz.className
           }
         >
-          Log a Sale
+          {isEditing ? 'Edit Sale' : 'Log a Sale'}
         </h2>
-        <div className='flex justify-center'>
+        <div className="flex justify-center">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col  gap-4 max-w-lg w-full p-4"
+            className="flex flex-col gap-4 max-w-lg w-full p-4"
           >
-            <label >
-             <p className={'font-semibold text-orange-400 text-xl ' + fugaz.className}> Product:</p>
-              <select
-                value={selectedProduct}
-                onChange={(e) => setSelectedProduct(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg"
+            <label>
+              <p
+                className={
+                  'font-semibold text-orange-400 text-xl ' + fugaz.className
+                }
               >
-                <option value="" disabled >
-                  Select a product
-                </option>
-                {products.map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.name} (Stock: {product.quantity})
-                  </option>
-                ))}
-              </select>
+                Product:
+              </p>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search for a product"
+                className="w-full p-2 border border-gray-300 rounded-lg"
+                disabled={isEditing} // Prevent editing product during update
+              />
+              {filteredProducts.length > 0 && (
+                <ul className="border border-gray-300 rounded-lg max-h-40 overflow-y-auto">
+                  {filteredProducts.map((product) => (
+                    <li
+                      key={product.id}
+                      className="p-2 hover:bg-gray-200 cursor-pointer"
+                      onClick={() => {
+                        setSelectedProduct(product);
+                        setSearchTerm(product.name);
+                        setFilteredProducts([]);
+                      }}
+                    >
+                      {product.name} (Stock: {product.quantity})
+                    </li>
+                  ))}
+                </ul>
+              )}
             </label>
-            <label className={'font-semibold text-orange-400 ' + fugaz.className}>
+            <label
+              className={'font-semibold text-orange-400 ' + fugaz.className}
+            >
               Quantity:
               <input
                 type="number"
@@ -92,7 +191,9 @@ export default function SalesForm() {
                 className="w-full p-2 border border-gray-300 rounded-lg"
               />
             </label>
-            <label className={'font-semibold text-orange-400 ' + fugaz.className}>
+            <label
+              className={'font-semibold text-orange-400 ' + fugaz.className}
+            >
               Customer Name (Optional):
               <input
                 type="text"
@@ -105,7 +206,7 @@ export default function SalesForm() {
               type="submit"
               className="bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-900"
             >
-              Log Sale
+              {isEditing ? 'Update Sale' : 'Log Sale'}
             </button>
           </form>
         </div>

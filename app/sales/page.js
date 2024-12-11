@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { Fugaz_One, Rubik_Wet_Paint } from 'next/font/google';
 import Navbar from '../(components)/Navbar';
 import { MdDelete, MdModeEdit } from 'react-icons/md';
+import { useRouter } from 'next/navigation';
 
 const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
@@ -33,6 +34,7 @@ export default function SalesHistory() {
   const [filteredSales, setFilteredSales] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
 
   // Fetch sales data from Firestore
   useEffect(() => {
@@ -80,6 +82,11 @@ export default function SalesHistory() {
     } finally {
       setIsDeleting(false);
     }
+  };
+
+  // Handle editing a sale
+  const handleEdit = (sale) => {
+    router.push(`/salesForm?id=${sale.id}`);
   };
 
   // Render sales history
@@ -158,6 +165,7 @@ export default function SalesHistory() {
                 </button>
 
                 <button
+                  onClick={() => handleEdit(sale)}
                   className="bg-orange-300 hover:bg-orange-400 shadow-md shadow-gray-500 rounded-full text-xl px-4 py-2 transition hover:scale-105 ease-in duration-100"
                 >
                   <MdModeEdit />
