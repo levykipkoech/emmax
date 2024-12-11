@@ -1,6 +1,7 @@
 'use client';
 
 import { Fugaz_One, Rubik_Wet_Paint } from 'next/font/google';
+import { IoIosArrowBack } from "react-icons/io";
 import { MdModeEdit, MdDelete } from 'react-icons/md';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -15,6 +16,8 @@ import {
 } from 'firebase/firestore';
 import Navbar from '../(components)/Navbar';
 import { useAuth } from '@/context/Authcontext';
+import Link from 'next/link';
+import SalesFormWrapper from '../salesForm/page';
 
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
@@ -137,7 +140,7 @@ export default function Product() {
           prev.filter((product) => product.id !== deletedId)
         );
       }
-      router.refresh()
+      router.refresh();
     } catch (error) {
       console.error('Failed to delete product:', error);
       alert('An error occurred while deleting the product.');
@@ -153,23 +156,32 @@ export default function Product() {
         {/* Categories */}
         {!showProducts ? (
           <div>
-            <button
-              onClick={() => {
-                setSelectedCategory('All');
-                setShowProducts(true);
-              }}
-              className="px-4 py-2 m-3 rounded-lg text-white bg-blue-500 hover:bg-blue-700 transition"
-            >
-              Show All Products
-            </button>
-            <h1
-              className={
-                'text-2xl font-bold m-3 text-orange-600 ' + fugaz.className
-              }
-            >
-              {' '}
-              Categories
-            </h1>
+            <div className='display block sm:flex justify-between mt-3 mb-2'>
+              <button
+                onClick={() => {
+                  setSelectedCategory('All');
+                  setShowProducts(true);
+                }}
+                className="px-4 py-2 m-3 rounded-lg text-white bg-blue-500 hover:bg-blue-700 transition"
+              >
+                Show All Products
+              </button>
+
+              <h1
+                className={
+                  'text-2xl font-bold m-3 text-orange-600 ' + fugaz.className
+                }
+              >
+                {' '}
+                Categories
+              </h1>
+
+              <Link href="/productform" >
+                <button className={"p-2 m-3  rounded-xl bg-green-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white " + fugaz.className}>
+                  create product
+                </button>
+              </Link>
+            </div>
             <div className="flex flex-col items-center gap-4 p-4 sm:grid grid-cols-4">
               {categories.map((category) => (
                 <button
@@ -178,7 +190,10 @@ export default function Product() {
                     setSelectedCategory(category);
                     setShowProducts(true);
                   }}
-                  className={"px-4 py-2 rounded-lg text-white bg-orange-500 hover:bg-orange-700 transition " + fugaz.className}
+                  className={
+                    'px-4 py-2 rounded-lg text-white bg-orange-500 hover:bg-orange-700 transition ' +
+                    fugaz.className
+                  }
                 >
                   {category}
                 </button>
@@ -187,21 +202,22 @@ export default function Product() {
           </div>
         ) : (
           <div>
-            <div className="flex justify-between">
+            <div className=" flex justify-between text-center">
               <button
                 onClick={() => setShowProducts(false)}
-                className="px-4 py-2 m-4 rounded-lg text-white bg-gray-500 hover:bg-gray-700 transition"
+                className="px-4 py-2 m-4 rounded-full text-2xl text-white bg-gray-500 hover:bg-gray-700 transition"
               >
-                Back to Categories
+               <IoIosArrowBack />
               </button>
 
               {/* Search Bar */}
               <div className="mb-4 px-4">
+              
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search product by name..."
+                  placeholder="enter name.."
                   className="p-2 m-4 border border-gray-300 rounded-lg"
                 />
               </div>

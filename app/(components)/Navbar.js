@@ -55,21 +55,18 @@ export default function Navbar() {
                   home
                 </li>
               </Link>
-              <Link href="/products">
-                <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white">
-                  products
-                </li>
-              </Link>
-              <Link href="/productform">
-                <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900  hover:scale-105 ease-in duration-300 text-white">
-                  create product
-                </li>
-              </Link>
               <Link href="/dashboard">
                 <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900  hover:scale-105 ease-in duration-300 text-white">
                   Dashboard
                 </li>
               </Link>
+              <Link href="/products">
+                <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white">
+                  products
+                </li>
+              </Link>
+              
+              
               <Link href="/sales">
                 <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900  hover:scale-105 ease-in duration-300 text-white">
                   sales
@@ -129,11 +126,7 @@ export default function Navbar() {
                   products
                 </li>
               </Link>
-              <Link href="/productform">
-                <li onClick={() => setNav(false)} className="p-4">
-                  Create product
-                </li>
-              </Link>
+              
               <Link href="/dashboard">
                 <li onClick={() => setNav(false)} className="p-4">
                   dashboard
