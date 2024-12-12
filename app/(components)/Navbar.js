@@ -2,10 +2,9 @@
 import { Fugaz_One, Rubik_Wet_Paint } from 'next/font/google';
 import React, { useEffect, useState } from 'react';
 import { RiMenu4Fill } from 'react-icons/ri';
-import { IoMdClose } from "react-icons/io";
+import { IoMdClose } from 'react-icons/io';
 import Link from 'next/link';
 import Logout from './Logout';
-
 
 const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
@@ -29,13 +28,14 @@ export default function Navbar() {
   };
 
   return (
-    <div className={ shadow
-            ? 'sticky top-0 h-20 shadow-xl z-[100] bg-gradient-to-r from-gray-700 to-orange-700 '
-            : 'sticky top-0 h-20 z-[100] ' + fugaz.className}>
-      
-      <div
-        className={" " + fugaz.className}
-      >
+    <div
+      className={
+        shadow
+          ? 'sticky top-0 h-20 shadow-xl z-[100] bg-gradient-to-r from-gray-700 to-orange-700 '
+          : 'sticky top-0 h-20 z-[100] ' + fugaz.className
+      }
+    >
+      <div className={' ' + fugaz.className}>
         <div className="flex justify-between items-center pt-4 ">
           <Link href="/">
             <h1
@@ -65,8 +65,7 @@ export default function Navbar() {
                   products
                 </li>
               </Link>
-              
-              
+
               <Link href="/sales">
                 <li className="p-2 m-3 rounded-xl  bg-orange-900 hover:bg-gray-900  hover:scale-105 ease-in duration-300 text-white">
                   sales
@@ -88,7 +87,7 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      
+
       <div
         className={
           nav ? 'md:hidden fixed left-0 top-0 w-full h-screen bg-black/70' : ''
@@ -103,7 +102,12 @@ export default function Navbar() {
         >
           <div>
             <div className="flex items-center justify-between m-2 pb-2 border-b border-[#ed6d04] rounded-lg">
-              <h1 className={'uppercase font-bold pl-8 text-2xl bg-gradient-to-r from-orange-500 to-gray-300 bg-clip-text text-transparent ' + rubik.className}>
+              <h1
+                className={
+                  'uppercase font-bold pl-8 text-2xl bg-gradient-to-r from-orange-500 to-gray-300 bg-clip-text text-transparent ' +
+                  rubik.className
+                }
+              >
                 emmax
               </h1>
               <div
@@ -112,13 +116,19 @@ export default function Navbar() {
               >
                 <IoMdClose />
               </div>
-            
             </div>
 
-            <ul className={"capitalize flex flex-col text-xl " + fugaz.className}>
-            <Link href="/">
+            <ul
+              className={'capitalize flex flex-col text-xl ' + fugaz.className}
+            >
+              <Link href="/">
                 <li onClick={() => setNav(false)} className="p-4 ">
                   home
+                </li>
+              </Link>
+              <Link href="/dashboard">
+                <li onClick={() => setNav(false)} className="p-4">
+                  dashboard
                 </li>
               </Link>
               <Link href="/products">
@@ -126,15 +136,10 @@ export default function Navbar() {
                   products
                 </li>
               </Link>
-              
-              <Link href="/dashboard">
-                <li onClick={() => setNav(false)} className="p-4">
-                  dashboard
-                </li>
-              </Link>
+
               <Link href="/sales">
                 <li onClick={() => setNav(false)} className="p-4">
-                sales
+                  sales
                 </li>
               </Link>
               <Link href="/login">

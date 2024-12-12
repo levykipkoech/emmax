@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
   const footer = (
     <footer
       className={
-        'capitalize fixed bottom-0 left-0 w-full text-white py-4 text-center bg-gray-600 ' +
+        'capitalize fixed bottom-0 left-0 w-full text-center py-3 bg-gradient-to-r from-orange-300 to-gray-900 text-orange-600  ' +
         fugaz.className
       }
     >

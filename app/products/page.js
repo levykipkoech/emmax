@@ -156,7 +156,7 @@ export default function Product() {
         {/* Categories */}
         {!showProducts ? (
           <div>
-            <div className='display block sm:flex justify-between mt-3 mb-2'>
+            <div className='display place-items-center flex justify-between mt-3 mb-2'>
               <button
                 onClick={() => {
                   setSelectedCategory('All');
@@ -167,14 +167,6 @@ export default function Product() {
                 Show All Products
               </button>
 
-              <h1
-                className={
-                  'text-2xl font-bold m-3 text-orange-600 ' + fugaz.className
-                }
-              >
-                {' '}
-                Categories
-              </h1>
 
               <Link href="/productform" >
                 <button className={"p-2 m-3  rounded-xl bg-green-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white " + fugaz.className}>
@@ -182,7 +174,16 @@ export default function Product() {
                 </button>
               </Link>
             </div>
-            <div className="flex flex-col items-center gap-4 p-4 sm:grid grid-cols-4">
+            
+            <h1
+                className={
+                  'text-2xl text-center tracking-widest font-bold m-3  bg-gradient-to-r from-red-400 to-green-400 bg-clip-text text-transparent ' + fugaz.className
+                }
+              >
+                {' '}
+                Categories
+              </h1>
+            <div className="grid grid-cols-2 items-center gap-4 p-4 sm:grid sm:grid-cols-4">
               {categories.map((category) => (
                 <button
                   key={category}

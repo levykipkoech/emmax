@@ -102,10 +102,7 @@ export default function DashboardPage() {
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 my-6">
-          <div className="p-4 bg-green-100 rounded-lg shadow">
-            <h3 className="text-xl font-bold">Total Sales</h3>
-            <p className="text-2xl">{totalSales}</p>
-          </div>
+         
           <div className="p-4 bg-blue-100 rounded-lg shadow">
             <h3 className="text-xl font-bold">Total Revenue</h3>
             <p className="text-2xl">ksh {totalRevenue.toFixed(2)}</p>
@@ -117,6 +114,10 @@ export default function DashboardPage() {
           <div className="p-4 bg-purple-100 rounded-lg shadow">
             <h3 className="text-xl font-bold">Total Products</h3>
             <p className="text-2xl">{totalProducts}</p>
+          </div>
+          <div className="p-4 bg-green-100 rounded-lg shadow">
+            <h3 className="text-xl font-bold">Total Sales</h3>
+            <p className="text-2xl">{totalSales}</p>
           </div>
         </div>
 
