@@ -140,6 +140,17 @@ export default function ProductForm() {
           >
             {isUpdateMode ? 'Update Product' : 'Create Product'}
           </h3>
+          <label className="font-semibold text-orange-400" htmlFor="category">
+            Category:
+          </label>
+          <input
+            id="category"
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="border-2 rounded-md p-2 w-full"
+            required
+          />
 
           <label className="font-semibold text-orange-400" htmlFor="name">
             Name:
@@ -191,18 +202,6 @@ export default function ProductForm() {
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="border-2 rounded-md p-2 w-full"
-            required
-          />
-
-          <label className="font-semibold text-orange-400" htmlFor="category">
-            Category:
-          </label>
-          <input
-            id="category"
-            type="text"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
             className="border-2 rounded-md p-2 w-full"
             required
           />
