@@ -1,34 +1,50 @@
 import { db } from '@/firebase';
-import { collection, addDoc, doc, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+  getDoc,
+} from 'firebase/firestore';
 
-export async function logSale(productId, quantity, customerName) {
+export async function logSale(productId, quantity, sellingPrice, customerName) {
   try {
+    // Validate inputs
+    if (quantity <= 0 || sellingPrice <= 0) {
+      alert('Quantity and Selling Price must be greater than zero.');
+      return false;
+    }
+
     // Get the product details
     const productRef = doc(db, 'products', productId);
     const productSnap = await getDoc(productRef);
 
     if (!productSnap.exists()) {
-      console.error('Product not found');
+      alert('Product not found.');
+      console.error('Product not found in the database.');
       return false;
     }
 
     const productData = productSnap.data();
+
+    // Check stock availability
     if (productData.quantity < quantity) {
-      alert('Insufficient stock');
+      alert('Insufficient stock to complete the sale.');
       return false;
     }
 
     // Calculate total price
-    const totalPrice = productData.sellingPrice * quantity;
+    const totalPrice = sellingPrice * quantity;
 
     // Add sale transaction
     await addDoc(collection(db, 'sales'), {
       productId,
       productName: productData.name,
       quantity,
-      pricePerUnit: productData.sellingPrice,
+      sellingPrice, // Explicitly include selling price
       totalPrice,
-      customerName,
+      customerName: customerName || null, // Allow optional customer name
       timestamp: serverTimestamp(),
     });
 
@@ -37,10 +53,11 @@ export async function logSale(productId, quantity, customerName) {
       quantity: productData.quantity - quantity,
     });
 
-    alert('Sale logged successfully');
+    alert('Sale logged successfully.');
     return true;
   } catch (error) {
-    console.error('Error logging sale:', error);
+    console.error('Error logging sale:', error.message);
+    alert('Failed to log the sale. Please try again.');
     return false;
   }
 }

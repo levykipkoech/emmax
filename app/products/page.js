@@ -167,12 +167,14 @@ export default function Product() {
                 Show All Products
               </button>
 
-
+            {(role === 'admin') && (
               <Link href="/productform" >
-                <button className={"p-2 m-3  rounded-xl bg-green-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white " + fugaz.className}>
-                  create product
-                </button>
-              </Link>
+              <button className={"p-2 m-3  rounded-xl bg-green-900 hover:bg-gray-900 hover:scale-105 ease-in duration-300 text-white " + fugaz.className}>
+                create product
+              </button>
+            </Link>
+            )}
+              
             </div>
             
             <h1

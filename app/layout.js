@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
   const footer = (
     <footer
       className={
-        'capitalize fixed bottom-0 left-0 w-full text-center py-3 bg-gradient-to-r from-orange-300 to-gray-900 text-orange-600  ' +
+        'capitalize fixed bottom-0 left-0 w-full text-center py-3 bg-gradient-to-r from-orange-900 to-gray-900 text-orange-600  ' +
         fugaz.className
       }
     >
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
       <AuthProvider>
         <body
           className={
-            'w-full mx-auto text-base bg-gradient-to-r from-gray-800 to-orange-700 min-h-screen flex flex-col ' +
+            'w-full mx-auto text-base bg-gradient-to-r from-gray-800 to-orange-900 min-h-screen flex flex-col ' +
             opensans.className
           }
         >

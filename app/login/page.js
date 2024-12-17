@@ -61,7 +61,7 @@ export default function Page() {
         </h1>
       </Link>
       <div className="flex flex-col justify-center items-center gap-8 w-full max-w-[400px]">
-        <h3 className={`text-5xl md:text-6xl ${fugaz.className}`}>
+        <h3 className={`text-5xl md:text-6xl bg-gradient-to-r from-red-600 to-green-400 bg-clip-text text-transparent ${fugaz.className}`}>
           {isRegistered ? 'Register' : 'Log in'}
         </h3>
         <input

@@ -132,6 +132,10 @@ export default function SalesHistory() {
                 <span className="pl-3 text-blue-300">{sale.productName}</span>
               </div>
               <div>
+                selling Price:
+                <span className="pl-3 text-blue-300">ksh {sale.sellingPrice}</span>
+              </div>
+              <div>
                 Quantity:{' '}
                 <span className="pl-3 text-blue-300">{sale.quantity}</span>
               </div>
@@ -139,6 +143,7 @@ export default function SalesHistory() {
                 Total Price:{' '}
                 <span className="pl-3 text-blue-300">ksh {sale.totalPrice}</span>
               </div>
+              
               <div>
                 Customer:{' '}
                 <span className="pl-3 text-blue-300">
