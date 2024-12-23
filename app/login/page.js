@@ -5,6 +5,7 @@ import { Fugaz_One, Rubik_Wet_Paint } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const fugaz = Fugaz_One({ subsets: ['latin'], weight: ['400'] });
 const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
@@ -12,6 +13,7 @@ const rubik = Rubik_Wet_Paint({ subsets: ['latin'], weight: ['400'] });
 export default function Page() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowpassword] = useState(false);
   const [role, setRole] = useState('user'); // Default role
   const [isRegistered, setIsRegistered] = useState(false);
   const [authenticating, setAuthenticating] = useState(false);
@@ -51,6 +53,10 @@ export default function Page() {
     }
   }
 
+  const togglePasswordVisibility = () => {
+    setShowpassword((prev) => !prev);
+  };
+
   return (
     <div className="h-screen flex flex-col items-center justify-center px-4">
       <Link href="/" className="absolute top-6 left-6">
@@ -61,7 +67,9 @@ export default function Page() {
         </h1>
       </Link>
       <div className="flex flex-col justify-center items-center gap-8 w-full max-w-[400px]">
-        <h3 className={`text-5xl md:text-6xl bg-gradient-to-r from-red-600 to-green-400 bg-clip-text text-transparent ${fugaz.className}`}>
+        <h3
+          className={`text-5xl md:text-6xl bg-gradient-to-r from-red-600 to-green-400 bg-clip-text text-transparent ${fugaz.className}`}
+        >
           {isRegistered ? 'Register' : 'Log in'}
         </h3>
         <input
@@ -71,14 +79,23 @@ export default function Page() {
           aria-label="email"
           className="w-full px-4 py-2 sm:py-3 border-2 border-solid border-gray-400 rounded-lg outline-none duration-300 hover:border-gray-600 focus:border-gray-600"
         />
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          type="password"
-          aria-label="password"
-          className="w-full px-4 py-2 sm:py-3 border-2 border-solid border-gray-400 rounded-lg outline-none duration-300 hover:border-gray-600 focus:border-gray-600"
-        />
+        <div className="relative w-full">
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            type={showPassword ? 'text' : 'password'}
+            aria-label="password"
+            className="w-full px-4 py-2 sm:py-3 border-2 border-solid border-gray-400 rounded-lg outline-none duration-300 hover:border-gray-600 focus:border-gray-600"
+          />
+          <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="absolute inset-y-0 right-3 flex items-center text-lg text-gray-500"
+          >
+            {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+          </button>
+        </div>
         <button
           onClick={handleSubmit}
           disabled={authenticating}

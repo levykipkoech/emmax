@@ -185,7 +185,7 @@ export default function Product() {
                 {' '}
                 Categories
               </h1>
-            <div className="grid grid-cols-2 items-center gap-4 p-4 sm:grid sm:grid-cols-4">
+            <div className="grid grid-cols-1 items-center gap-5 m-3 p-4 md:grid md:grid-cols-3">
               {categories.map((category) => (
                 <button
                   key={category}
