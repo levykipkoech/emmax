@@ -224,7 +224,7 @@ export default function DashboardPage() {
             >
               {Array.from({ length: 12 }, (_, index) => (
                 <option key={index} value={index}>
-                  {new Date(2024, index).toLocaleString('default', {
+                  {new Date(2025, index).toLocaleString('default', {
                     month: 'long',
                   })}
                 </option>
@@ -239,8 +239,8 @@ export default function DashboardPage() {
               onChange={handleYearChange}
             >
               {Array.from({ length: 5 }, (_, index) => (
-                <option key={index} value={2024 - index}>
-                  {2024 - index}
+                <option key={index} value={2025 - index}>
+                  {2025 - index}
                 </option>
               ))}
             </select>
